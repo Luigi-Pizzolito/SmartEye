@@ -20,8 +20,9 @@ services:
       - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CONTROLLER:PLAINTEXT,PLAINTEXT:PLAINTEXT
       - KAFKA_CFG_CONTROLLER_QUORUM_VOTERS=0@kafka:9093
       - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
-    volumes:
-      - kafka_data:/bitnami/kafka
+      - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
+    # volumes:
+    #   - kafka_data:/bitnami/kafka
 
   videobuffer0:
     build:
