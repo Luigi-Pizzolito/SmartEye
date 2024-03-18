@@ -25,4 +25,4 @@ RUN chmod +x /usr/local/bin/wait-for-it
 # run
 # CMD ["app"]
 # Use wait-for-it to wait for the dependent service
-CMD ["wait-for-it", "kafka:9092", "--", "app"]
+CMD ["wait-for-it", "-s", "kafka:9092", "--", "app"]

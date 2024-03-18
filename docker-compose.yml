@@ -33,3 +33,9 @@ services:
       - kafka-net
     depends_on:
       - kafka
+    restart: unless-stopped
+    # deploy:
+    #   restart_policy:
+    #     condition: on-failure
+    #     delay: 5s
+    #     window: 30s
