@@ -1,5 +1,11 @@
 package main
 
+/* ********************************************************************
+   * Author: 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
+/* ********************************************************************/
+
+// Utility class to calculate the current FPS of every incoming livestream
+
 import (
 	"time"
 )

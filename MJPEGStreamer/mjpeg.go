@@ -1,5 +1,14 @@
 package main
 
+/* ******************************************************************
+* Author: 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
+/* *****************************************************************/
+
+// Method for serving MJPEG streams over HTTP
+// each connected client spawns a new instance of this handler function
+// therefor, each handler function must recieve another copy of the original
+// stream via broadcast group; in order to support many clients simultaneously
+
 import (
 	"bytes"
 	"fmt"
@@ -32,6 +41,7 @@ func ServeMJPEG(w http.ResponseWriter, r *http.Request) {
 	// Implementing CloseNotifier to check if client disconnected
 	closeNotifier := w.(http.CloseNotifier).CloseNotify()
 
+	// Event processing loop
 	for {
 		select {
 		case img := <-instanceChan:

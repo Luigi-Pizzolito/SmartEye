@@ -1,12 +1,28 @@
 name: SmartEye
 
+# *******************************************************************
+# * Author: 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
+# *******************************************************************
+
+# Docker Compose file for SmartEye system
+# defines all the Docker containers for each module/service
+# as well as virtual networks, ports, configuration,
+# cross-dependencies, storage volumes, etc
+
+# ! REFRAIN FROM EDITING DIRECTLY unless you know what you are doing
+#  Instead, edit the environment configuration file: <filename>
+#  TODO: Add environment file, compose parsing, docs
+
+# Define virtual networks
 networks:
   kafka-net:
     driver: bridge
 
+# Define persistent storage volumes
 volumes:
   kafka_data:
 
+# Define services and their properties
 services:
   # Apache Kafka + KRaft Manager
   # Handles asynchronous publisher/subscriber message channels in real-time

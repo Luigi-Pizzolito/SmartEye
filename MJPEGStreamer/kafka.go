@@ -1,5 +1,12 @@
 package main
 
+/* ********************************************************************
+   * Author: 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
+/* ********************************************************************/
+
+// Class to handle reading MJPEG streams from Kafka topics
+// as well as listing Kafka topics with valid streams
+
 import (
 	"fmt"
 	"log"
@@ -17,6 +24,7 @@ type kafkaMultiStreamReader struct {
 	framestreams []string
 }
 
+// Kafka Multi-Stream reader initialiser
 func NewKafkaMultiStreamReader(brokers []string, validstreams []string) *kafkaMultiStreamReader {
 	// Initialize Kafka consumer
 	config := sarama.NewConfig()
@@ -29,8 +37,10 @@ func NewKafkaMultiStreamReader(brokers []string, validstreams []string) *kafkaMu
 	}
 }
 
+// Method for getting a list of valid MJPEG stream Kafka topics
 func (k *kafkaMultiStreamReader) getFrameTopicsList() []string {
 fetch_topics:
+	// Start a Kafka cluster admin to be able to access the topic list
 	admin, err := sarama.NewClusterAdmin(k.brokers, k.config)
 	if err != nil {
 		log.Fatalf("Error creating Kafka admin client: %v", err)
@@ -43,7 +53,7 @@ fetch_topics:
 		log.Fatalf("Error listing topics: %v", err)
 	}
 
-	//  Check if topics have already been created, if not, wait
+	//  Check if valid topics have already been created, if not, wait and try again
 	found := false
 	for topic := range topics {
 		if ContainsAnySubstring(topic, k.framestreams) {
@@ -65,6 +75,7 @@ fetch_topics:
 		}
 	}
 
+	// return list of valid MJPEG stream topics
 	return frameTopics
 }
 
@@ -78,6 +89,9 @@ func ContainsAnySubstring(str string, substrs []string) bool {
 	return false
 }
 
+// Method for consuming MJPEG frames
+// forwarding the frame data to a broadcast group
+// and updating the stream's FPS counter
 func (k *kafkaMultiStreamReader) consumeTopicFrames(topic string, bcast *broadcast) {
 	defer wg.Done()
 

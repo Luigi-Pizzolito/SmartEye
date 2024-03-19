@@ -1,5 +1,11 @@
 package main
 
+/* ********************************************************************
+   * Author: 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
+/* ********************************************************************/
+
+// Class to handle sending MJPEG streams to Kafka topics
+
 import (
 	"log"
 	"strings"

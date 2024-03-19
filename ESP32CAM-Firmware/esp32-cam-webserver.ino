@@ -5,6 +5,7 @@
 #include <DNSServer.h>
 #include "src/parsebytes.h"
 
+//TODO: blink on-board LED when streaming video
 
 /* This sketch is a extension/expansion/reork of the 'official' ESP32 Camera example
  *  sketch from Expressif:

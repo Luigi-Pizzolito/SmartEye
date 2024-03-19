@@ -1,3 +1,9 @@
+# *******************************************************************
+# * Author: 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
+# *******************************************************************
+
+# Dockerfile for setting up MJPEG Streamer container image
+
 # get golang Docker image
 FROM golang:1.22
 WORKDIR /usr/src/app

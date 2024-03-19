@@ -5,6 +5,10 @@ from PIL import Image
 from io import BytesIO
 from kafka import KafkaConsumer
 
+# *******************************************************************
+# * Author: 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
+# *******************************************************************
+
 # Kafka configuration
 bootstrap_servers = 'kafkad:9092'
 topic = 'camera0'

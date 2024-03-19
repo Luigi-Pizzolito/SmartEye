@@ -1,12 +1,21 @@
 package main
 
+/* ********************************************************************
+   * Author: 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
+/* ********************************************************************/
+
+// Broadcast class to allow broadcasting []byte from one goroutine
+// to many other goroutines in a brodcast group
+// Used for sharing the livestream frames from the Kafka consumer
+// to each instance(goroutine) handling each client connection
+
 // broadcast struct
 type broadcast struct {
 	listeners map[int]chan []byte
 }
 
-// NewBroadcast creates a new broadcast instance
-func NewBroadcast() *broadcast {
+// NewBroadcast creates a new broadcast instance (broadcast group)
+func NewBroadcastGroup() *broadcast {
 	return &broadcast{
 		listeners: make(map[int]chan []byte),
 	}

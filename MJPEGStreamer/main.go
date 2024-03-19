@@ -1,8 +1,34 @@
 package main
 
-//TODO: read from Kafka topic
-//TODO: read multiple topics and handle multiple streams
+/* ******************************************************************
+* Author: 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
+/* *****************************************************************/
+
+// Main program for MJPEGStreamer
+// reads JPEG frames from Kafka topics specified to contain MJPEG streams
+// and serves HTTP MJPEG streams to many web clients, for many cameras
+// also keeps track of each streams FPS and lists streams.
+
+// Endpoints:
+//  - /<Kafka_topic_name>
+//     - MJPEG stream of that respective Kafka stream
+//  - /list
+//     - JSON object containing a list of current streams and their FPS
+//        - e.g. {"Streams":["camera0"],"FPS":{"camera0":0}}
+
+// Data flow:
+// Kafka topic: camera0 -|					     |--> camera0 stream endpoint: Client 0
+// Kafka topic: camera1 -|					     |--> camera0 stream endpoint: Client 1
+// Kafka topic: camera2 -|--> MJPEG Streamer --> |--> camera1 stream endpoint: Client 0
+// Kafka topic: camera3 -|					     |--> cameraX stream endpoint: Client X
+// Kafka topic: cameraX -|					     |--> /list endpoint:		   Client X\
+
+// Configuration environment variables:
+//  -
+//TODO: fill in this config doc
+
 //TODO: read opts from ENV
+//TODO: use a propper logging library
 
 import (
 	"fmt"
@@ -14,12 +40,13 @@ import (
 )
 
 var (
+	// List of Kafka topics containing valid MJPEG streams to distribute
 	streamChannels []string
-
+	// Map of broadcast groups, used to send the JPEG frames to each handler serving the stream to each connected client
 	bcastMap map[string]*broadcast
-
+	// Multiple FPS counter manager, for counting the FPS of each stream
 	fpsman *MultiFPSCounter
-
+	// Waitgroup for async goroutines
 	wg sync.WaitGroup
 )
 
@@ -40,7 +67,7 @@ func main() {
 	// setup FPS counters
 	fpsman = NewMultiFPSCounter()
 	wg.Add(1)
-	go fpsman.tick()
+	go fpsman.tick() // Update FPS counters asynchronously
 
 	// create broadcast group map
 	bcastMap = make(map[string]*broadcast)
@@ -53,7 +80,7 @@ func main() {
 		go func() {
 			// Create broadcast group to send the frames to all clients' server routines
 			channelName := "/" + channel
-			bcastMap[channelName] = NewBroadcast()
+			bcastMap[channelName] = NewBroadcastGroup()
 
 			// Start FPS counter
 			fpsman.frame(channel)
@@ -64,7 +91,7 @@ func main() {
 
 			// Start the server handler
 			mux.HandleFunc("/"+channel, ServeMJPEG)
-			// Get the host and port
+			// Print the host and port
 			fmt.Printf("Handling endpoint at %s/%s\n", addr, channel)
 		}()
 	}
@@ -82,6 +109,7 @@ func main() {
 	wg.Wait()
 }
 
+// HTTP JSON response handler for stream and fps listing
 func listStreams(w http.ResponseWriter, r *http.Request) {
 	fmt.Printf("Client %s requested stream list\n", r.RemoteAddr)
 
