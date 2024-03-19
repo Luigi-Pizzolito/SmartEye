@@ -44,7 +44,7 @@ func main() {
 	wg.Add(5)
 
 	go consumeData()
-	go requestStream("http://192.168.1.104:81")
+	go requestStream("http://192.168.1.106:81")
 	go measureRate()
 	go timeOutDetect()
 	go printFrameRate()
@@ -146,7 +146,7 @@ func timeOutDetect() {
 		// Detect timeout
 		if rate == 0 {
 			select {
-			case <-time.After(10 * time.Second):
+			case <-time.After(30 * time.Second):
 				if rate == 0 {
 					log.Println("Timed out")
 					time.Sleep(2 * time.Second)

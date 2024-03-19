@@ -8,7 +8,9 @@ volumes:
   kafka_data:
 
 services:
-
+  # Apache Kafka + KRaft Manager
+  # Handles asynchronous publisher/subscriber message channels in real-time
+  # and provides disk store (DB) of all historical messages
   kafka:
     image: 'bitnami/kafka:latest'
     networks:
@@ -25,9 +27,11 @@ services:
     # volumes:
     #   - kafka_data:/bitnami/kafka
     # expose to localhost for testing
-    ports:
-      - 9094:9094
+    # ports:
+    #   - 9094:9094
 
+  # ESP32CAM -> Kafka
+  # Create one instance for each camera
   videobuffer0:
     build:
       context: ./ESP32CAM-VideoBuffer
@@ -43,6 +47,10 @@ services:
     #     delay: 5s
     #     window: 30s
 
+  # Kafka -> HTTP MJPEG Streaming server
+  # Single instance handles all streams, multi-client
+  # Be sure to set framestreams to the proper filters
+  # to select which Kafka topics to process as streams
   mjpegstreamer:
     build:
       context: ./MJPEGStreamer
@@ -54,7 +62,9 @@ services:
     depends_on:
       - kafka
       - videobuffer0
+    restart: unless-stopped
 
+  # Testing Python Kafka Consumer
   # pythonconsumer:
   #   build:
   #     context: ./test-pythonImageConsumer
