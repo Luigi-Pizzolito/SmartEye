@@ -1,7 +1,5 @@
 package main
 
-import "fmt"
-
 // broadcast struct
 type broadcast struct {
 	listeners map[int]chan []byte
@@ -32,7 +30,6 @@ func (b *broadcast) LeaveGroup(memberID int) {
 
 // SendMessage sends a message to all listener channels
 func (b *broadcast) SendMessage(message []byte) {
-	fmt.Println("Sending msg")
 	for _, listener := range b.listeners {
 		listener <- message
 	}

@@ -43,13 +43,24 @@ services:
     #     delay: 5s
     #     window: 30s
 
-  pythonconsumer:
+  mjpegstreamer:
     build:
-      context: ./test-pythonImageConsumer
-      dockerfile: ../testPythonImageConsumer.Dockerfile
+      context: ./MJPEGStreamer
+      dockerfile: ../MJPEGStreamer.Dockerfile
     networks:
       - kafka-net
+    ports:
+      - 8095:8095
     depends_on:
       - kafka
-    volumes:
-      - ./img:/app/img
+
+  # pythonconsumer:
+  #   build:
+  #     context: ./test-pythonImageConsumer
+  #     dockerfile: ../testPythonImageConsumer.Dockerfile
+  #   networks:
+  #     - kafka-net
+  #   depends_on:
+  #     - kafka
+  #   volumes:
+  #     - ./img:/app/img
