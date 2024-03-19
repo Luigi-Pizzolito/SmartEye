@@ -1,8 +1,8 @@
 package main
 
-/* ******************************************************************
-* Author: 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
-/* *****************************************************************/
+/* ********************************************************************
+   * Author: 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
+/* ********************************************************************/
 
 // Main program for MJPEGStreamer
 // reads JPEG frames from Kafka topics specified to contain MJPEG streams
