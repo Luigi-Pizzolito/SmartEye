@@ -39,16 +39,18 @@ func main() {
 	defer producer.Close()
 	log.Println("Connected to Kafka")
 
+	wg.Add(5)
+
 	go consumeData()
 	go requestStream("http://192.168.1.104:81")
 	go measureRate()
 	go timeOutDetect()
+	go printFrameRate()
 
 	wg.Wait()
 }
 
 func requestStream(url string) {
-	wg.Add(1)
 	defer wg.Done()
 
 startvideor:
@@ -94,12 +96,11 @@ startvideor:
 			goto startvideor
 		}
 		dataCh <- buf.Bytes()
-		log.Println("Recieved img.")
+		// log.Println("Recieved img.")
 	}
 }
 
 func consumeData() {
-	wg.Add(1)
 	defer wg.Done()
 	defer close(dataCh)
 	for data := range dataCh {
@@ -119,12 +120,11 @@ func consumeData() {
 
 		// Send to Kafka
 		producer.SendMessage(topic, data)
-		log.Println("Message sent asynchronously to Kafka topic:", topic)
+		// log.Println("Message sent asynchronously to Kafka topic:", topic)
 	}
 }
 
 func measureRate() {
-	wg.Add(1)
 	defer wg.Done()
 	var prevCounter int // Counter value at the previous measurement
 
@@ -134,16 +134,14 @@ func measureRate() {
 			currentCounter := counter
 			rate = currentCounter - prevCounter
 			prevCounter = currentCounter
-		case <-time.After(5 * time.Second):
-			fmt.Printf("Framerate: %d\n", rate)
 		}
 	}
 }
 
 func timeOutDetect() {
-	wg.Add(1)
 	defer wg.Done()
 	for {
+		// Detect timeout
 		if rate == 0 {
 			select {
 			case <-time.After(10 * time.Second):
@@ -155,6 +153,17 @@ func timeOutDetect() {
 					//! Docker daemon will automatically restart the program
 				}
 			}
+		}
+	}
+}
+
+func printFrameRate() {
+	defer wg.Done()
+	for {
+		select {
+		case <-time.After(5 * time.Second):
+			// Print frame rate
+			fmt.Printf("Framerate: %d\n", rate)
 		}
 	}
 }
