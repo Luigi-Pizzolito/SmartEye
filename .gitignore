@@ -22,3 +22,5 @@ go.work
 
 # Docker system ignores
 .kafka_data
+img/*.jpg
+test-pythonImageConsumer/venv

@@ -24,6 +24,9 @@ services:
     # persistent kafka storage, may also be directory mapped
     # volumes:
     #   - kafka_data:/bitnami/kafka
+    # expose to localhost for testing
+    ports:
+      - 9094:9094
 
   videobuffer0:
     build:
@@ -39,3 +42,14 @@ services:
     #     condition: on-failure
     #     delay: 5s
     #     window: 30s
+
+  pythonconsumer:
+    build:
+      context: ./test-pythonImageConsumer
+      dockerfile: ../testPythonImageConsumer.Dockerfile
+    networks:
+      - kafka-net
+    depends_on:
+      - kafka
+    volumes:
+      - ./img:/app/img

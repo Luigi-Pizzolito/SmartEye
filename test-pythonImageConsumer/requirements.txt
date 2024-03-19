@@ -1,0 +1,5 @@
+kafka-python==2.0.2
+numpy==1.26.4
+opencv-python-headless==4.9.0.80
+pillow==10.2.0
+python-snappy==0.7.1
