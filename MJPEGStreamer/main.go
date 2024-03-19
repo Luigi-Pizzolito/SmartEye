@@ -22,16 +22,15 @@ import (
 )
 
 var (
-	mux sync.Mutex
-	// kafkaChannel chan []byte
 	JPEGFrames []string
-	// frameChannel chan []byte
-	bcast *broadcast
+	bcast      *broadcast
 
 	wg sync.WaitGroup
 )
 
 func consumeFromKafka(topic string) {
+	defer wg.Done()
+
 	// // Initialize Kafka consumer
 	// config := sarama.NewConfig()
 	// config.Consumer.Return.Errors = true
@@ -65,8 +64,6 @@ func consumeFromKafka(topic string) {
 	// 	}
 	// }
 
-	defer wg.Done()
-
 	var err error
 	JPEGFrames, err = readJPEGFrames("../img")
 	if err != nil {
@@ -74,18 +71,9 @@ func consumeFromKafka(topic string) {
 		panic(err)
 	}
 	for _, frame := range JPEGFrames {
-		/*
-			select {
-			case kafkaChannel <- []byte(frame):
-			default:
-				// if full, remove oldest and insert
-				<-kafkaChannel
-				kafkaChannel <- []byte(frame)
-				fmt.Println("Removed oldest frame - Kafka channel is full")
-			}
-			time.Sleep(100 * time.Millisecond)
-		*/
+		// send frames to broadcast group
 		bcast.SendMessage([]byte(frame))
+		// simulate 10fps
 		time.Sleep(100 * time.Millisecond)
 	}
 }
@@ -131,6 +119,7 @@ func readJPEGFrames(directory string) ([]string, error) {
 }
 
 func main() {
+	// params
 	addr := ":8095"
 	channel := "camera0"
 
@@ -157,11 +146,13 @@ func main() {
 // ServerHTTP will use the camera in Mjpeg server it over the response.
 // Sets all the appropriate headers to be able to stream a Mjpeg over http.
 func ServeMJPEG(w http.ResponseWriter, r *http.Request) {
-	fmt.Println("Client connected")
+	fmt.Printf("Client %s connected to %s\n", r.RemoteAddr, r.URL.String())
 
+	// Start a new broadcast group listener
 	instanceID, instanceChan := bcast.NewListener()
 	defer bcast.LeaveGroup(instanceID)
 
+	// Start a multipart reader
 	mimeWriter := multipart.NewWriter(w)
 	defer mimeWriter.Close()
 	contentType := fmt.Sprintf("multipart/x-mixed-replace;boundary=%s", mimeWriter.Boundary())
@@ -175,6 +166,7 @@ func ServeMJPEG(w http.ResponseWriter, r *http.Request) {
 	for {
 		select {
 		case img := <-instanceChan:
+			// frame recieved, create a new part
 			partHeader := make(textproto.MIMEHeader)
 			partHeader.Add("Content-Type", "image/jpeg")
 
@@ -184,15 +176,18 @@ func ServeMJPEG(w http.ResponseWriter, r *http.Request) {
 				break
 			}
 
+			// Write part to client
 			partHeader.Add("Content-Length", strconv.Itoa(len(img)))
 			if _, err = io.Copy(partWriter, bytes.NewReader(img)); err != nil {
 				log.Printf("Could not write the image to the response: %v\n", err)
 				break
 			}
 		case <-closeNotifier:
-			log.Println("Client disconnected.")
+			// Client disconnected
+			fmt.Printf("Client %s disconnected to %s\n", r.RemoteAddr, r.URL.String())
 			return
 		default:
+			// If no frames were recieved, wait a little
 			time.Sleep(50 * time.Millisecond)
 		}
 
