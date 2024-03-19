@@ -53,6 +53,7 @@ services:
       - 8095:8095
     depends_on:
       - kafka
+      - videobuffer0
 
   # pythonconsumer:
   #   build:

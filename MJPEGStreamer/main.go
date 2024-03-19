@@ -27,17 +27,20 @@ func main() {
 	// params
 	addr := ":8095"
 	kafkaBrokers := []string{"kafka:9092"}
+	//? any kafka topic containing these substrings is processed as a JPEG stream
+	frameStreams := []string{"camera"}
+
+	// connect to Kafka brokers
+	kafkaCon := NewKafkaMultiStreamReader(kafkaBrokers, frameStreams)
+
+	// get channels from Kafka
+	streamChannels = kafkaCon.getFrameTopicsList()
+	fmt.Println("Found frame topics: ", streamChannels)
 
 	// setup FPS counters
 	fpsman = NewMultiFPSCounter()
 	wg.Add(1)
 	go fpsman.tick()
-
-	// connect to Kafka brokers
-	kafkaCon := NewKafkaMultiStreamReader(kafkaBrokers)
-
-	// get channels from Kafka
-	streamChannels = []string{"camera0", "camera1"}
 
 	// create broadcast group map
 	bcastMap = make(map[string]*broadcast)
