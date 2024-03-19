@@ -1,5 +1,9 @@
 package main
 
+//TODO: read from Kafka topic
+//TODO: read multiple topics and handle multiple streams
+//TODO: read opts from ENV
+
 import (
 	"bytes"
 	"fmt"

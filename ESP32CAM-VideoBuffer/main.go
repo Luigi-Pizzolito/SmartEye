@@ -1,5 +1,7 @@
 package main
 
+//TODO: read opts from ENV
+
 import (
 	"fmt"
 	"log"
