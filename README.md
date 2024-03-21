@@ -16,4 +16,16 @@ If you want to test and run just the webui server, you can:
 cd WebInterface
 python -m http.server 8094
 ```
-In both cases, you can access the website at `http://localhost:8094`.
+In both cases, you can access the website at [`http://localhost:8094`](http://localhost:8094).
+
+### Interface Endpoints
+- Web Interface
+    - [`http://localhost:8094`](http://localhost:8094)
+- Video Streams
+    - [List of streams & FPS](http://localhost:8095/list)
+    - Individual streams
+        - [http://localhost:8095/<stream_name>](http://localhost:8095/)
+<!-- TODO: add API Server endpoints -->
+
+<!-- ## Explanation of Docker System -->
+<!-- TODO: explanation of Docker system -->
