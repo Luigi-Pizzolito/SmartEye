@@ -51,7 +51,7 @@ services:
   videobuffer-{{ camera }}:
     build:
       context: ./ESP32CAM-VideoBuffer
-      dockerfile: ../ESP32CAM-VideoBuffer.Dockerfile
+      dockerfile: ../dockerfiles/ESP32CAM-VideoBuffer.Dockerfile
     environment:
       - CAMERA={{ camera }}
       - TYPE={{ env[camera.upper() + '_TYPE'] }}
@@ -81,7 +81,7 @@ services:
   mjpegstreamer:
     build:
       context: ./MJPEGStreamer
-      dockerfile: ../MJPEGStreamer.Dockerfile
+      dockerfile: ../dockerfiles/MJPEGStreamer.Dockerfile
     networks:
       - kafka-net
     ports:
@@ -103,7 +103,7 @@ services:
   # pythonconsumer:
   #   build:
   #     context: ./test-pythonImageConsumer
-  #     dockerfile: ../testPythonImageConsumer.Dockerfile
+  #     dockerfile: ../dockerfiles/testPythonImageConsumer.Dockerfile
   #   networks:
   #     - kafka-net
   #   depends_on:
