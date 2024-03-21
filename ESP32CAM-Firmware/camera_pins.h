@@ -1,3 +1,7 @@
+/* ********************************************************************
+   * Author: 2022 easytarget (@https://github.com/easytarget/esp32-cam-webserver)
+   * Author: 2024 JiZe Nan (@https://github.com/GreatBastard)
+/* ********************************************************************/
 /*  
  *   Pin definitions for some common ESP-CAM modules
  *   
@@ -182,6 +186,7 @@
   #define PCLK_GPIO_NUM     21
   // Note NO PSRAM,; so maximum working resolution is XGA 1024×768
   // M5 Stack status/illumination LED details unknown/unclear
+  //* Modification by GreatBastard for LED blink
   #define LED_PIN            16 // Status led
   #define LED_ON          HIGH //
   #define LED_OFF          LOW //

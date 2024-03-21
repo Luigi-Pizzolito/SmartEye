@@ -5,7 +5,10 @@
 #include <DNSServer.h>
 #include "src/parsebytes.h"
 
-//TODO: blink on-board LED when streaming video
+/* ********************************************************************
+   * Author: 2022 easytarget (@https://github.com/easytarget/esp32-cam-webserver)
+   * Author: 2024 JiZe Nan (@https://github.com/GreatBastard)
+/* ********************************************************************/
 
 /* This sketch is a extension/expansion/reork of the 'official' ESP32 Camera example
  *  sketch from Expressif:
@@ -709,6 +712,7 @@ void loop() {
                 warned = false;
             }
             // loop here for WIFI_WATCHDOG, turning debugData true/false depending on serial input..
+            //* Modification by GreatBastard for LED blink
             unsigned long start = millis();
             while (millis() - start < WIFI_WATCHDOG ) {
                 digitalWrite(LED_PIN, LED_ON);
