@@ -7,6 +7,8 @@ import json
 # * Author: 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
 # *******************************************************************
 
+#TODO: test this class
+
 #? for recieving frames we just read the HTTP MJPEG stream from the stream server
 class KafkaCon:
     def __init__(self, bootstrap_servers, mjpeg_host):
@@ -28,7 +30,6 @@ class KafkaCon:
         return "http:/"+self.host+"/"+topic+".mjpeg"
 
     def send_frame(self, topic, frame):
-        #TODO: recieve cv2 img and JPEG encode --> test
         # Encode the image to JPEG format
         success, encoded_image = cv2.imencode('.jpg', frame)
         # Check if encoding was successful
@@ -40,11 +41,12 @@ class KafkaCon:
         self.producer.send(topic, value=jpeg_string)
 
     def send_data(self, topic, data):
-        #TODO: JSON format check or JSON encode python interface/object --> test
         # JSON encode
         json_string = json.dumps(data, separators=(',', ':'))
         # Send to Kafka topic
         self.producer.send(topic, value=json_string)
+
+    #TODO: get_data Kafka consumer for incoming APIs, using asyncio
 
     def close(self):
         # Producer connections
