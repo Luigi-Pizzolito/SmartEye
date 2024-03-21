@@ -22,6 +22,9 @@ go.work
 
 # IntelliJ
 .idea
+**/.idea/
+# PyCache
+**/__pycache__/
 # VS Code
 .vscode
 
