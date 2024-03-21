@@ -50,8 +50,8 @@ services:
   {%- for camera in env.CAMERAS.split(',') %}
   videobuffer-{{ camera }}:
     build:
-      context: ./ESP32CAM-VideoBuffer
-      dockerfile: ../dockerfiles/ESP32CAM-VideoBuffer.Dockerfile
+      context: ./VideoBuffer
+      dockerfile: ../dockerfiles/VideoBuffer.Dockerfile
     environment:
       - CAMERA={{ camera }}
       - TYPE={{ env[camera.upper() + '_TYPE'] }}
