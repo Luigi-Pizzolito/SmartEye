@@ -176,7 +176,7 @@ class FaceRecognizer:
                                 [int(faces[i].left() + faces[i].right()) / 2,
                                  int(faces[i].top() + faces[i].bottom()) / 2]
                             )
-                            img=cv.rectangle(img,tuple([d.left(),d.top()]),tuple([d.right(),d.bottom()]),(255,255,255),thickness=2)
+                            img=cv.rectangle(img,tuple([d.left(),d.top()]),tuple([d.right(),d.bottom()]),(255,255,255),thickness=4)
                     #再写上名字
                     for i in range(self.current_frame_face_cnt):
 
