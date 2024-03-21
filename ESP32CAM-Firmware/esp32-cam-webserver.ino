@@ -688,6 +688,7 @@ void loop() {
      * The stream and URI handler processes initiated by the startCameraServer() call at the
      * end of setup() will handle the camera and UI processing from now on.
     */
+
     if (accesspoint) {
         // Accespoint is permanently up, so just loop, servicing the captive portal as needed
         // Rather than loop forever, follow the watchdog, in case we later add auto re-scan.
@@ -710,8 +711,11 @@ void loop() {
             // loop here for WIFI_WATCHDOG, turning debugData true/false depending on serial input..
             unsigned long start = millis();
             while (millis() - start < WIFI_WATCHDOG ) {
-                delay(100);
+                digitalWrite(LED_PIN, LED_ON);
+                delay(500);
                 handleSerial();
+                digitalWrite(LED_PIN, LED_OFF);
+                delay(500);
             }
         } else {
             // disconnected; attempt to reconnect
