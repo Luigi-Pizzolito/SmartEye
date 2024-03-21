@@ -80,6 +80,15 @@ services:
       - videobuffer0
     restart: unless-stopped
 
+  # Web Interface HTTP Server
+  uiwebserver:
+    image: nginx:latest
+    ports: 
+      - 8094:80
+    volumes:
+      - ./WebInterface:/usr/share/nginx/html
+    
+
   # Testing Python Kafka Consumer
   # pythonconsumer:
   #   build:
