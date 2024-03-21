@@ -10,7 +10,7 @@ from kafka import KafkaConsumer
 # *******************************************************************
 
 # Kafka configuration
-bootstrap_servers = 'kafkad:9092'
+bootstrap_servers = 'kafka:9092'
 topic = 'camera0'
 
 # Create Kafka consumer

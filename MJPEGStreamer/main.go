@@ -10,7 +10,7 @@ package main
 // also keeps track of each streams FPS and lists streams.
 
 // Endpoints:
-//  - /<Kafka_topic_name>
+//  - /<Kafka_topic_name>.mjpeg
 //     - MJPEG stream of that respective Kafka stream
 //  - /list
 //     - JSON object containing a list of current streams and their FPS
@@ -80,7 +80,7 @@ func main() {
 		// for each channel, asynchronously setup the server backend
 		go func() {
 			// Create broadcast group to send the frames to all clients' server routines
-			channelName := "/" + channel
+			channelName := "/" + channel + ".mjpeg"
 			bcastMap[channelName] = NewBroadcastGroup()
 
 			// Start FPS counter
@@ -91,9 +91,9 @@ func main() {
 			go kafkaCon.consumeTopicFrames(channel, bcastMap[channelName])
 
 			// Start the server handler
-			mux.HandleFunc("/"+channel, ServeMJPEG)
+			mux.HandleFunc("/"+channel+".mjpeg", ServeMJPEG)
 			// Print the host and port
-			fmt.Printf("Handling endpoint at %s/%s\n", addr, channel)
+			fmt.Printf("Handling endpoint at %s/%s.mjpeg\n", addr, channel)
 		}()
 	}
 
