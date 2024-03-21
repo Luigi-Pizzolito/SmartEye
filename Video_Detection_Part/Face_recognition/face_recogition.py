@@ -97,7 +97,7 @@ class FaceRecognizer:
 
     def update_fps(self):
         now = time.time()
-        # 每秒刷新 fps / Refresh fps per second
+        # 每秒刷新 fps
         if str(self.start_time).split(".")[0] != str(now).split(".")[0]:
             self.fps_show = self.fps
         self.start_time = now
