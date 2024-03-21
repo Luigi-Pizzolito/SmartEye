@@ -22,9 +22,9 @@ type KafkaProducer struct {
 // NewKafkaProducer creates a new KafkaProducer instance.
 func NewKafkaProducer(brokers []string) (*KafkaProducer, error) {
 	config := sarama.NewConfig()
-	config.Producer.RequiredAcks = sarama.WaitForLocal       // Only wait for the leader to ack
-	config.Producer.Compression = sarama.CompressionSnappy   // Compress messages
-	config.Producer.Flush.Frequency = 200 * time.Millisecond // Flush batches every 500ms
+	config.Producer.RequiredAcks = sarama.WaitForLocal      // Only wait for the leader to ack
+	config.Producer.Compression = sarama.CompressionSnappy  // Compress messages
+	config.Producer.Flush.Frequency = 30 * time.Millisecond // Flush batches every 30ms
 	config.Producer.Return.Successes = true
 
 	producer, err := sarama.NewSyncProducer(brokers, config)
