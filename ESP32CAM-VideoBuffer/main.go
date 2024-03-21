@@ -16,11 +16,13 @@ package main
 // espcamX -|										 |--> cameraX topic
 
 // Configuration environment variables:
-//  -
-//TODO: fill in this config doc
+//  - CAMERA =camera name in all lowercase
+//  - CAMERANAME_TYPE =espcam or usbcam
+//  - CAMERANAME_IP =http://<ip>:<port>
+//  - CAMERANAME_DEVICE =/dev/<device_name>
 
 //TODO: more descriptive FPS print: topic/camera, timestamp
-//TODO: read opts from ENV
+//TODO: WIP - read opts from ENV
 //TODO: use a propper logging library
 //TODO: clean error exit instead of panic()
 
@@ -50,11 +52,13 @@ var (
 )
 
 func main() {
-	// ESP32CAM Address
-	webjpegcam := "http://192.168.1.106:81"
-	// Kafka brokers
+	// Configuration from ENV variables
+	//TODO: accept usbcam
+	// -- Kafka brokers
 	brokers := []string{"kafka:9092"}
-	topic = "camera0"
+	topic = getENVvar("CAMERA")
+	// -- ESP32CAM Address
+	webjpegcam := getENVvar("IP")
 
 	log.Println("Starting ESPcam Buffer for " + topic)
 	// Create a new KafkaProducer instance

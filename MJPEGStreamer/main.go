@@ -28,6 +28,7 @@ package main
 //TODO: fill in this config doc
 
 //TODO: read opts from ENV
+//? TODO: update streams if a new camera is detected?
 //TODO: use a propper logging library
 
 import (
