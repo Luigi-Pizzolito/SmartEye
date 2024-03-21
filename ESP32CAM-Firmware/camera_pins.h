@@ -182,9 +182,9 @@
   #define PCLK_GPIO_NUM     21
   // Note NO PSRAM,; so maximum working resolution is XGA 1024×768
   // M5 Stack status/illumination LED details unknown/unclear
-  // #define LED_PIN            x // Status led
-  // #define LED_ON          HIGH //
-  // #define LED_OFF          LOW //
+  #define LED_PIN            16 // Status led
+  #define LED_ON          HIGH //
+  #define LED_OFF          LOW //
   // #define LAMP_PIN          x  // LED FloodLamp.
 
 #elif defined(CAMERA_MODEL_TTGO_T_JOURNAL)
