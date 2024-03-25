@@ -89,6 +89,28 @@ MAIN
 	<div class="row justify-content-between">
 		<div class="col-md-6 pt-4">
 			<h5 class="font-weight-bold spanborder"><span>Camera 0</span></h5>
+			<div class="mb-3 d-flex justify-content-between">
+				<div class="pr-3">
+					<canvas id='test_canvas' width='544px' height='408px' style='border:1px solid #d3d3d3'>
+					</canvas>					
+					<script language="JavaScript">
+					  var ctx = document.getElementById('test_canvas').getContext('2d');
+					  var img = new Image();
+					  img.onload = function() {
+						ctx.drawImage(img, 0, 0);
+					  };
+					  	var theDate = new Date();
+					  	img.src = "http://172.20.10.3:81";
+					 	window.setInterval("refreshCanvas()", 10);
+						function refreshCanvas(){
+						ctx.drawImage(img, 0, 0);
+					};
+					</script>
+					<div class="card-text text-muted small">
+						 &middot; frame rate : 100fps
+					</div>
+				</div>
+			</div>
 <!-- 			<div class="mb-3 d-flex justify-content-between">
 				<div class="pr-3">
 					<h2 class="mb-1 h4 font-weight-bold">
@@ -108,12 +130,6 @@ MAIN
 		<div class="col-md-6 pl-4 pt-4">
             <h5 class="font-weight-bold spanborder"><span>Camera 1</span></h5>
 			<ol class="list-featured">
-				<!-- <video id="mjpeg-stream" width="640" height="480"></video>
-				<script>
-				    var mjpegStream = document.getElementById('mjpeg-stream');
-				    mjpegStream.src = "http://example.com/mjpeg-stream";
-				    mjpegStream.play();
-				</script> -->
 				<!-- <li>
 				<span>
 				<h6 class="font-weight-bold">
