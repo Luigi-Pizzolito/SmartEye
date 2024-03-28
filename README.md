@@ -6,8 +6,7 @@
 ## Running Full System
 1. Make sure you have Docker installed.
 2. Set the camera configurations in `config.env`.
-2. If you're using Linux, run `./setup.sh` to generate the configuration from `config.env`.
-   If you're using Windows, run `./setup_windows.sh` to generate the configuration from `config.env`.
+2. Run `./setup.sh` to generate the configuration from `config.env`.
 3. Run `docker compose up --build` to run the system.
 4. Press `Ctrl+C` to stop and run `docker compose down` to take the system down.
 
