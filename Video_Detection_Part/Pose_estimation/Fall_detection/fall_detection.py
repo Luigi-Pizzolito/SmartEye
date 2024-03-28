@@ -1,3 +1,8 @@
+# ********************************************************************
+#   * Author: 2024 Jingdi Lei (@https://github.com/kyrieLei)
+# ********************************************************************
+
+
 import cv2
 import mediapipe as mp
 import numpy as np

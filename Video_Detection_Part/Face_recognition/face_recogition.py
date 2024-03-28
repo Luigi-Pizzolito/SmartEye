@@ -1,5 +1,8 @@
-import logging
+# ********************************************************************
+#   * Author: 2024 Jingdi Lei (@https://github.com/kyrieLei)
+# ********************************************************************
 
+import logging
 from Face_store import detector,predictor,face_reco_model
 import cv2 as cv
 import time
