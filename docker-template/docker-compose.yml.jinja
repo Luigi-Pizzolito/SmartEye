@@ -4,6 +4,8 @@ name: SmartEye
 # * Author: 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
 # *******************************************************************
 
+{# TODO: add internal stream network, ?external network? #}
+
 # Docker Compose file for SmartEye system
 # defines all the Docker containers for each module/service
 # as well as virtual networks, ports, configuration,
@@ -23,6 +25,7 @@ volumes:
 
 # Define services and their properties
 services:
+  # Kafka
   # Apache Kafka + KRaft Manager
   # Handles asynchronous publisher/subscriber message channels in real-time
   # and provides disk store (DB) of all historical messages
@@ -45,7 +48,9 @@ services:
     # ports:
     #   - 9094:9094
 
+  # Video Buffer
   # ESP32CAM -> Kafka
+  # Requests video streams from cameras and outputs to Kafka topics
   # Create one instance for each camera
   {%- for camera in env.CAMERAS.split(',') %}
   videobuffer-{{ camera }}:
@@ -74,7 +79,9 @@ services:
     #     delay: 5s
     #     window: 30s
 
-  # Kafka -> HTTP MJPEG Streaming server
+  # MJPEG Streamer
+  # Kafka -> HTTP MJPEG Streaming server -> MJPEG live-streams
+  # Creates HTTP MJPEG streams from Kafka, for Web UI and AI processors
   # Single instance handles all streams, multi-client
   # Be sure to set framestreams to the proper filters
   # to select which Kafka topics to process as streams
@@ -91,6 +98,7 @@ services:
     restart: unless-stopped
 
   # Web Interface HTTP Server
+  # Serves Web UI files to clients
   uiwebserver:
     image: nginx:latest
     ports: 
@@ -98,7 +106,7 @@ services:
     volumes:
       - ./WebInterface:/usr/share/nginx/html
     
-
+  {# TODO: Remove this #}
   # Testing Python Kafka Consumer
   # pythonconsumer:
   #   build:
@@ -110,3 +118,12 @@ services:
   #     - kafka
   #   volumes:
   #     - ./img:/app/img
+
+  {# TODO: AI Processors #}
+
+  {# TODO: API Server #}
+
+  {# TODO: MQTT Server #}
+  {# TODO: Kafka<->MQTT Bridge #}
+
+  {# TODO: Re-organise this file #}

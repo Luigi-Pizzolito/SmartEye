@@ -1,0 +1,214 @@
+<!-- https://v5.bootcss.com/ -->
+<!-- Author: 2024 Cao Yuluan (https://github.com/cyuluan27) -->
+<!-- not finished yet, add some docs for this project -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="apple-touch-icon" sizes="76x76" href="./assets/img/favicon.ico">
+    <link rel="icon" type="image/png" href="./assets/img/favicon.ico">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>Docs for SmartEye</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'/>
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700|Source+Sans+Pro:400,700" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <!-- Main CSS -->
+    <link href="./assets/css/main.css" rel="stylesheet"/>
+    <!-- Docs CSS -->
+    <link href="./assets/css/vendor/bootstrap-toc.css" rel="stylesheet"/>
+    <link href="./assets/css/vendor/prism.css" rel="stylesheet"/>
+</head>
+    
+<body>  
+    
+    
+<!----------------------------------------------------------------------
+End fixed sidebar
+------------------------------------------------------------------------>
+
+<nav id="toc" class="fixedsidebar d-none d-lg-block">   
+    <h5 class="mt-4 mb-4 pt-1 pl-4"><a class="text-dark navbar-brand" href="./index.html"><strong>SmartEye</strong> </a></h5>
+    <!-- <a target="_blank" href="https://www.buymeacoffee.com/sal" class="btn btn-secondary mb-4 btn-sm btn-round"><i class="fas fa-coffee mr-1"></i> Buy me a coffee</a> -->
+</nav>
+    
+<!----------------------------------------------------------------------
+End fixed sidebar
+------------------------------------------------------------------------> 
+    
+       
+<main class="content-withfixedsidebar">
+    
+    
+<!----------------------------------------------------------------------
+NAVBAR (remove topnav if you don't want changed nav background on scroll)
+------------------------------------------------------------------------>
+<nav class="topnav navbar navbar-expand-lg navbar-light bg-white fixed-top">
+<div class="container">
+	<a class="navbar-brand d-lg-none" href="./index.html"><i class="fas fa-anchor mr-2"></i><strong>SmartEye</strong></a>
+	<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+	<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="navbar-collapse collapse" id="navbarColor02">
+		<ul class="navbar-nav mr-auto d-flex align-items-center">
+			<li class="nav-item">
+			<a class="nav-link" href="./index.html">&larr; Back to Home</a>
+			</li>
+		</ul>
+		<ul class="navbar-nav ml-auto d-flex align-items-center">			
+			<li class="nav-item highlight">
+			<a class="nav-link" target="_blank" href="https://www.wowthemes.net/mundana-free-html-bootstrap-template">Get this project</a>
+			</li>
+		</ul>
+	</div>
+</div>
+</nav>
+<!-- End Navbar -->
+    
+<!-------------------------------------
+HEADER
+--------------------------------------->
+<div class="jumbotron jumbotron-fluid mb-3 pb-0 pt-5 bg-white position-relative">
+	<div class="container h-100 tofront">
+		<div class="row align-items-center justify-content-center text-center">
+			<div class="col-md-10">
+				<h1 class="display-5 text-dark">Documentation</h1>
+			</div>
+		</div>
+	</div>
+</div>
+<!--- END HEADER -->
+
+<!-- DOCS CONTENT -->
+<div class="container pt-3 pb-5 mb-5">
+	<div class="row justify-content-center">
+      
+<div class="col-lg-11">
+<div id="docsarea" class="font-weight-normal">
+    
+<p class="lead">
+    Hey there! You’re looking at <a href="./index.html">SmartEye</a> official documentation. SmartEye offers a versatile and scalable solution for addressing various aspects of home security, monitoring, and smart device control, demonstrating the potential of integrating advanced technologies to enhance residential safety and convenience. Let’s begin!
+</p>
+    
+    
+<section class="pt-1 mt-0 pb-0 rounded">
+<div class="container text-center">
+	<div class="d-flex">
+		<div class="col">
+			<a href="./index.html"><img src="assets/img/web1.png" class="shadow-lg" style="max-width: 34vw;"></a>
+		</div>
+	</div>
+</div>
+</section>
+    
+<h1>Abstract</h1>
+<!-- <span style="color:#03a87c;"></span> -->
+<p>
+    In this study, we present a comprehensive system architecture aimed at enhancing home security, monitoring, and smart device control. Leveraging ESP32 microcontrollers, the system integrates image data collection from various sources, including cameras, coupled with advanced image processing techniques such as MMPose for human key-point detection and face recognition. Additionally, gesture recognition is implemented using another ESP32-CAM module. 
+</p>
+
+<p>
+    The system employs MQTT protocol for seamless communication between devices, enabling remote control of smart home devices and facilitating real-time data transmission. Face recognition serves as a robust security measure, capable of detecting intruders and alerting homeowners of potential threats. Human key-point detection plays a pivotal role in ensuring individual safety, particularly in scenarios such as detecting falls for elderly individuals or alerting authorities during emergencies. 
+</p>
+
+<p>
+    Furthermore, the implementation of a centralized web interface provides users with convenient access to live video feeds and control over connected smart devices. This interface serves as a centralized control hub, offering users a streamlined experience for monitoring and managing their home environment remotely. The developed system offers a versatile and scalable solution for addressing various aspects of home security, monitoring, and smart device control, demonstrating the potential of integrating advanced technologies to enhance residential safety and convenience.
+</p>
+
+<p>
+    <strong>Index Terms:</strong> ESP32, IoT, MQTT protocol, pose detection, DETR, remote control.
+</p>
+
+
+<h1>Background and importance of the research</h1>    
+
+<p>
+TODAY, population aging has become a common challenge faced by countries around the world. As the most populous developing country globally, China has transitioned into an aging society since the beginning of the 21st century. Up to now, she has entered a stage of profound aging, becoming one of the countries with the fastest aging population rates in the world. Population aging has exerted significant impacts on various aspects of China’s economic and social development [1]. In 2022, General Secretary Xi made a redeployment of the aging issue at the 20th CPC National Congress, emphasizing the implementation of proactive national strategies to address population aging. This includes developing modern elderly care services and basic elder-care industries, further optimizing services for elderly individuals living alone, and promoting access to basic elder-care services for all elderly individuals.
+</p>  
+
+<p>
+    Being described figuratively as “empty nesters”, elderly people living alone need <strong>multi-view</strong> attention on their personal security and health condition. Researchers conducted a survey using a stratified cluster sampling method on 1409 empty-nest elderly individuals in northern Jiangsu Province. The study found that the elderly self-rated their health as poor, with a 2-week illness rate of 32.9% and a chronic illness rate of 59.9%. Furthermore, 44.9% of the elderly regularly take medication, and 7.0% experience impairments in their daily life activities [2]. 
+</p>
+
+<p>
+    In this context, our research mainly concerns the elderly’s indoor safety. In this experiment, a room installs multiple cameras, each of which transmits its image flows using IoT methods with a embedded ESP32, a one-chip computer made in China, specialized in Wi-Fi and Bluetooth communication. And a remote controlled smart device, such as a light or a stereo, is too placed in the room. These interconnected cameras and devices are expected to accomplish 3 tasks: pose detection, face recognition and gesture detection.
+</p>        
+
+<h1>Literature review</h1>
+
+
+
+    
+</div><!-- End docs -->
+</div>
+</div>
+</div>
+<!-- End DOCS -->
+    
+
+<!--------------------------------------
+FOOTER
+--------------------------------------->
+<footer class="bg-light pb-5 pt-4">
+<div class="container">
+	<div class="row justify-content-center text-center">
+		<div class="col-md-12">			
+			<span class="d-block mt-3 text-muted">&copy;
+			<script>document.write(new Date().getFullYear())</script>
+			 SmartEye by ECS team
+            </span>
+		</div>
+	</div>
+</div>
+</footer>
+    
+    
+</main>
+<!--- end main -->
+    
+    
+<!--------------------------------------
+JAVASCRIPTS
+--------------------------------------->    
+<script src="./assets/js/vendor/jquery.min.js" type="text/javascript"></script>
+<script src="./assets/js/vendor/popper.min.js" type="text/javascript"></script>
+<script src="./assets/js/vendor/bootstrap.min.js" type="text/javascript"></script>
+<script src="./assets/js/functions.js" type="text/javascript"></script>
+    
+<!-- Docs -->
+<script src="./assets/js/vendor/prism.js" type="text/javascript"></script>
+<script src="./assets/js/vendor/bootstrap-toc.js" type="text/javascript"></script>
+<script>
+    $(function() {
+      new ClipboardJS('.btn');
+      var navSelector = '#toc';
+      var $myNav = $(navSelector);
+      Toc.init({
+          $nav: $('#toc'),
+          $scope: $('#docsarea')
+        });
+      $('body').scrollspy({
+        target: navSelector
+      });        
+    });
+</script>
+
+    
+
+<!-- Tooltips -->
+<script> $(function () { $('[data-toggle="tooltip"]').tooltip() }) </script>
+    
+<!-- Popovers -->    
+<script> 
+$(function () {
+$('[data-toggle="popover"]').popover()
+})
+$('.popover-dismiss').popover({
+  trigger: 'focus'
+})
+</script>
+
+</body>
+</html>
