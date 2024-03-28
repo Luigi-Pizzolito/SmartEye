@@ -1,7 +1,7 @@
 #!/bin/sh
 
 # *******************************************************************
-# * Author: 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
+# * Author: 2024 GreatBastard (@https://github.com/GreatBastard)
 # *******************************************************************
 
 # navigate to this scripts directory
