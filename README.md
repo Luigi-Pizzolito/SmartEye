@@ -24,7 +24,7 @@ In both cases, you can access the website at [`http://localhost:8094`](http://lo
 - Video Streams
     - [List of streams & FPS](http://localhost:8095/list)
     - Individual streams
-        - [http://localhost:8095/<stream_name>.mjpeg](http://localhost:8095/.mjpeg)
+        - [`http://localhost:8095/<stream_name>.mjpeg`](http://localhost:8095/.mjpeg)
 <!-- TODO: add API Server endpoints -->
 
 <!-- ## Project Directory Structure -->
