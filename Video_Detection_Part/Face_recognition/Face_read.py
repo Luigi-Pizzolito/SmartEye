@@ -1,3 +1,8 @@
+# ********************************************************************
+#   * Author: 2024 Jingdi Lei (@https://github.com/kyrieLei)
+# ********************************************************************
+
+
 import dlib
 import numpy as np
 import cv2 as cv
