@@ -56,7 +56,7 @@ func main() {
 	//TODO: accept usbcam
 	// -- Kafka brokers
 	brokers := []string{"kafka:9092"}
-	topic = getENVvar("CAMERA")
+	topic = getENVvar("CAMERA") + "-stream"
 	// -- ESP32CAM Address
 	webjpegcam := getENVvar("IP")
 
