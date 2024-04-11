@@ -135,7 +135,7 @@ services:
       - DATA_TOPIC_POSE={{ camera }}-pose-data
       - OUT_TOPIC_GESTURE={{ camera }}-gesture-stream
       - DATA_TOPIC_GESTURE={{ camera }}-gesture-data
-    restart: never
+    restart: no
   {%- endfor %}
 
   {# TODO: API Server #}
