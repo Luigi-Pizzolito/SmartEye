@@ -5,6 +5,7 @@ app = Flask(__name__)
 
 def webcam_stream():
     cap = cv2.VideoCapture(0)  # Use the first webcam (index 0)
+    cap.set(cv2.CAP_PROP_FPS, 5)
 
     while True:
         ret, frame = cap.read()
@@ -12,8 +13,8 @@ def webcam_stream():
             break
 
         # Resize the frame to VGA resolution (640x480)
-        # rframe = cv2.resize(frame, (320, 240))
-        rframe = cv2.resize(frame, (640, 480))
+        rframe = cv2.resize(frame, (320, 240))
+        # rframe = cv2.resize(frame, (640, 480))
 
         # Convert the frame to JPEG format
         ret, jpeg = cv2.imencode('.jpg', rframe)
