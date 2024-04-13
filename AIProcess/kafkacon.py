@@ -19,8 +19,10 @@ class KafkaCon:
     def connect(self):
         # Connect to Kafka brokers
         self.producer = KafkaProducer(
+            security_protocol="PLAINTEXT",
+            api_version="3.7",
             bootstrap_servers=self.bootstrap_servers,
-            acks=1,                     # Only wait for the leader to ack
+            acks=0,                     # Only wait for the leader to ack
             compression_type="snappy",  # Compress messages
             linger_ms=30                # Flush batches every 30ms
         )

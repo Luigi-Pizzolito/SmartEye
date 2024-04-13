@@ -107,10 +107,10 @@ def CameraStreamReady():
 def main():
     print("started main")
     # --
-    face_process = multiprocessing.Process(target=FaceProcess, args=())
-    face_process.start()
-    pose_process = multiprocessing.Process(target=PoseProcess, args=())
-    pose_process.start()
+    # face_process = multiprocessing.Process(target=FaceProcess, args=())
+    # face_process.start()
+    # pose_process = multiprocessing.Process(target=PoseProcess, args=())
+    # pose_process.start()
     hand_process = multiprocessing.Process(target=HandProcess, args=())
     hand_process.start()
     #  multiple process --

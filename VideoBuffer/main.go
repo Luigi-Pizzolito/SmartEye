@@ -37,6 +37,11 @@ import (
 
 	"mime/multipart"
 	"net/http"
+
+	//! profiler deps
+	_ "net/http/pprof"
+
+	"github.com/felixge/fgprof"
 )
 
 var (
@@ -52,6 +57,12 @@ var (
 )
 
 func main() {
+	//! profiler insert
+	http.DefaultServeMux.Handle("/debug/fgprof", fgprof.Handler())
+	go func() {
+		log.Println(http.ListenAndServe(":6060", nil))
+	}()
+
 	// Configuration from ENV variables
 	//TODO: accept usbcam
 	// -- Kafka brokers
@@ -80,6 +91,7 @@ func main() {
 	go printFrameRate()
 
 	wg.Wait()
+	producer.producer.AsyncClose()
 }
 
 // Request MJPEG stream from ESP32CAM
@@ -112,7 +124,7 @@ startvideor:
 	// 	log.Println("Content-Type header not found")
 	// 	return
 	// }
-	//? frame boundary as defined in ESP32CAM-Firmware
+	// //? frame boundary as defined in ESP32CAM-Firmware
 	boundary := "123456789000000000000987654321"
 
 	multipartReader := multipart.NewReader(resp.Body, boundary)

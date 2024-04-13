@@ -145,7 +145,8 @@ class FaceRecognizer:
                 self.frame_cnt +=1
                 logging.debug("Frame"+str(self.frame_cnt)+"starts")
                 flag, img=stream.read()
-                k=cv.waitKey(1)
+                # k=cv.waitKey(1)
+                k=-1
 
                 #检测人脸
                 faces = detector(img)
