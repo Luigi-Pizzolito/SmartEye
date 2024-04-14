@@ -261,6 +261,160 @@ among industries. Systems that identify people based on their biological charact
 </div>
 </div>
 
+<p>To get down to the recognition of a human’s face, detecting
+it in the given images in the first place. The face recognition
+system begins first with the localization of the human faces in a
+particular image. The purpose of this step is to determine if the
+input image contains human faces or not. Many techniques are
+used to detect and locate the human face image, for example,
+Viola–Jones detector, histogram of oriented gradient (HOG),
+and principal component analysis (PCA). Also, the face detection
+step can be used for video and image classification,
+object detection, region-of-interest detection, and so on [10].</p>
+
+<p>The main function of the feature extraction step is to extract
+the features of the face images detected in the detection
+step. Several techniques involve extracting the shape of the
+mouth, eyes, or nose to identify the face using the size and
+distance. HOG, Eigenface, independent component analysis
+(ICA), linear discriminant analysis (LDA), scale-invariant feature
+transform (SIFT), Gabor filter, local phase quantization
+(LPQ), Haar wavelets, Fourier transforms, and local binary
+pattern (LBP) techniques are widely used to extract the face
+features.</p>
+
+<p>Face recognition involves verification and identification.
+Verification requires matching one face to another to authorize
+access to a requested identity. However, identification compares
+a face to several other faces that are given with several
+possibilities to find the face’s identity. During the identification
+step, a test face is compared with a set of faces aiming to find
+the most likely match. During the identification step, a test
+face is compared with a known face in the database in order
+to make the acceptance or rejection decision. Correlation filters
+(CFs), convolutional neural network (CNN), and also k-nearest
+neighbour (K-NN) are known to effectively address this task.
+Sometimes, some steps are not separated. For example, the
+facial features (eyes, mouth, and nose) used for feature extraction are frequently used during face detection. Detection
+and extraction of features can be performed simultaneously.</p>
+
+<p>Before the performance increases of Graphics processing
+units (GPUs), central processing unit (CPU), and programmable
+gate arrays (FPGAs), which are required to efficiently
+perform complex computing tasks, several methods
+based on machine learning have been proposed [12]. Eigenface
+(1987-1990) is one of the most thoroughly investigated
+approaches to face recognition. It used principal component
+analysis to efficiently represent pictures of faces. They argued
+that any face images could be approximately reconstructed
+by a small collection of weights for each face and a standard
+face picture (eigenpicture). A hybrid neural network
+(1997) is presented combining local image sampling, a selforganizing
+map (SOM) neural network, and a convolutional
+neural network. Graph matching (1993) is another approach
+to face recognition, with a dynamic link structure for distortion
+invariant object recognition which employed elastic graph
+matching to find the closest stored graph. Hidden Markov
+Models (HMMs) is applied to human face recognition. Faces
+were intuitively divided into regions such as the eyes, nose,
+mouth, etc., which can be associated with the states of a hidden
+Markov model.</p>
+
+<div class="container text-center">
+<img src="assets/img/docs/Fig8.png" class="shadow-sm" width="500">
+<div class="pt-1 pb-3 card-text text-muted small">
+	Fig.8 Hidden Markov Models (HMMs)
+</div>
+</div>
+
+<p>Due to the development of deep learning methods [13],
+Convolutional neural network (CNN) is widely used in face
+recognition technology (2017). CNN is a deep feed-forward
+neural network with local connection and weight sharing.
+Its basic structure is input layer, convolution layer (conv),
+subsampling layer (pooling), full connection layer and output
+layer, shown in Fig.9. Deep belief network (DBN) (2006) is an
+unsupervised depth generation model for feature extraction. It
+consists of multiple layers, each of which is a random variable
+of binary variable. The DBN based pose mapping is different
+from the algebraic feature method. Its feature extraction does
+not need to be selected manually. It is completely completed
+by automatic learning. It can learn a global mapping from
+the side face image to the front face image.</p>
+
+<p>Transformer is a
+model from sequence to sequence. Its biggest feature is that it
+abandons the traditional convolutional neural network (CNN)
+and recurrent neural network (RNN) and uses the attention
+mechanism to form a network, so that the model can be
+trained in parallel and can focus on the global information.
+Transformer has made great achievements in the field of
+natural language processing (NLP) since it was proposed [14].
+Compared with region CNN (RCNN) and other methods, the
+biggest feature of detection transformer (Detr) is to transform
+the problem of target detection into the problem of unordered
+set prediction: after feature extraction by CNN, the image
+becomes a feature sequence and is input into the encoder and
+decoder of transformer, which directly outputs an unordered
+set with a specified length of N. each element in the set
+contains the object category and coordinates.</p>
+
+<div class="container text-center">
+<img src="assets/img/docs/Fig9.png" class="shadow-sm" width="500">
+<div class="pt-1 pb-3 card-text text-muted small">
+	Fig.9 CNN basic structure
+</div>
+</div>
+
+<div class="container text-center">
+<img src="assets/img/docs/Fig10.png" class="shadow-sm" width="300">
+<div class="pt-1 pb-3 card-text text-muted small">
+	Fig.10 The overall flow chart of vision Transformer applied to recognition
+tasks [14]
+</div>
+</div>
+
+
+<h2>Gesture Detection</h2>
+<p>We will be following the progress of Open-MMLab, who
+have developed a tool for gesture detection as depicted in
+Figure [1]. MMPose stands out as an open-source toolbox for
+pose estimation built on PyTorch. They give a result shown in
+Fig.11.</p>
+
+<p>On one hand, for our gesture Detection Model, we prefer
+to prepare 2D Hand Key point datasets. To train and test the
+model, we typically utilize the MTUT method (Multi-modal
+Training and Uni-modal Testing) for gesture recognition.
+Additionally, we will implement hotkeys to execute various
+functions. For instance, if a user makes a gesture to lower the
+temperature of the air conditioner, the web server can detect
+it and adjust the air conditioner accordingly.</p>
+
+<p>The principle of Gesture Detection in MMPose revolves
+around leveraging computer vision techniques to analyse and
+interpret human gestures captured through image or video
+data. MMPose utilizes deep learning models and algorithms,
+particularly those based on convolutional neural networks
+(CNNs), to detect and recognize key points or landmarks on
+the human body, such as the positions of finger joints.</p>
+
+<div class="container text-center">
+<img src="assets/img/docs/Fig11.png" class="shadow-sm" width="300">
+<div class="pt-1 pb-3 card-text text-muted small">
+	Fig.11 The performance test for gesture detection
+</div>
+</div>
+
+
+<h1>Our work</h1>
+
+<div class="container text-center">
+<img src="assets/img/docs/WorkPipeline.png" class="shadow-sm" width="600">
+<div class="pt-1 pb-3 card-text text-muted small">
+	Fig.12 System implementation diagram
+</div>
+</div>
 
 
 <p></p>
@@ -273,6 +427,27 @@ among industries. Systems that identify people based on their biological charact
 
 <p></p>
 
+
+<p></p>
+
+<p></p>
+
+<p></p>
+
+
+
+<p></p>
+
+<p></p>
+
+<p></p>
+
+
+<p></p>
+
+<p></p>
+
+<p></p>
 
     
 </div><!-- End docs -->
