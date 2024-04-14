@@ -2,7 +2,7 @@ from flask import Flask, render_template, Response
 import cv2
 from Face_recognition.face_recogition import process_face
 from Pose_estimation.gesture_recognition.HandClassification import process_gesture
-from Pose_estimation.Fall_detection.Fall_detection import process_fall
+from Pose_estimation.Fall_detection.fall_detection import process_fall
 
 app = Flask(__name__,template_folder='templates',static_folder='static')
 

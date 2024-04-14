@@ -16,7 +16,7 @@ detector = dlib.get_frontal_face_detector()
 
 class FaceRegister:
     def __init__(self):
-        self.path_photos_from_camera = "Data/data_faces/"
+        self.path_photos_from_camera = "Face_recognition/Data/data_faces/"
         self.font = cv.FONT_ITALIC
         self.existing_faces_cnt = 0
         self.ss_cnt = 0

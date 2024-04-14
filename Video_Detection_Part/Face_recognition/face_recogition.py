@@ -8,7 +8,7 @@ import time
 import numpy as np
 import pandas as pd
 import os
-from Face_store import detector,predictor,face_reco_model
+from Face_recognition.Face_store import detector,predictor,face_reco_model
 from flask import Flask,render_template,Response
 
 
@@ -62,7 +62,7 @@ class FaceRecognizer:
         self.reclassify_interval = 10
 
     def get_faces_database(self):
-        path_features_known_csv = "Data/features.csv"
+        path_features_known_csv = "Face_recognition/Data/features.csv"
         if os.path.exists(path_features_known_csv):
 
             csv_rd = pd.read_csv(path_features_known_csv, header=None)
