@@ -82,7 +82,6 @@ services:
     hostname: kafka
     depends_on:
       - zookeeper
-    cpus: 2
     
   kafka-ui:
     image: provectuslabs/kafka-ui
@@ -123,7 +122,6 @@ services:
     ports: 
       - 6060:6060
     restart: unless-stopped
-    cpus: 2
   {%- endfor %}
     # deploy:
     #   restart_policy:
@@ -201,7 +199,6 @@ services:
     ports:
       - 8096:8096
     restart: no
-    cpus: 8
   {%- endfor %}
 
   {# TODO: API Server #}
