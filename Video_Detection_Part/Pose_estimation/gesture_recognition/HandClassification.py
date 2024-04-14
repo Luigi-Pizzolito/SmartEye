@@ -116,7 +116,6 @@ def process_gesture(cap):
     while True:
         ret, frame = cap.read()
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame = cv2.flip(frame, 1)
         results = gesture_detector.hands.process(frame)
         frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
@@ -137,9 +136,7 @@ def process_gesture(cap):
         frame = buffer.tobytes()
         yield (b'--frame\r\n'
                b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-        if cv2.waitKey(1) == ord('q'):
-            break
+
     cap.release()
-    cv2.destroyAllWindows()
 
 

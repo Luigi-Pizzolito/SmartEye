@@ -107,8 +107,4 @@ def process_fall(cap):
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + image + b'\r\n')
 
-            if cv2.waitKey(1) == ord('q'):
-                break
-
         cap.release()
-        cv2.destroyAllWindows()

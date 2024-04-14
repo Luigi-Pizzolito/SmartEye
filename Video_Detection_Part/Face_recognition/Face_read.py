@@ -80,17 +80,17 @@ class FaceRegister:
 
         while stream.isOpened():
             flag, frame = stream.read()
-            k = cv.waitKey(1)
+            # k = cv.waitKey(1) #! dont wait for key, register face as soon as this program runs
             faces = detector(frame)
 
-            if k == ord('n'):
-                self.existing_faces_cnt += 1
-                current_face_dir = self.path_photos_from_camera + "person_" + str(self.existing_faces_cnt)
-                os.mkdir(current_face_dir)
-                # logging.info("\n%-40s %s", "Create folders:", current_face_dir)
+            # if k == ord('n'):
+            self.existing_faces_cnt += 1
+            current_face_dir = self.path_photos_from_camera + "person_" + str(self.existing_faces_cnt)
+            os.mkdir(current_face_dir)
+            # logging.info("\n%-40s %s", "Create folders:", current_face_dir)
 
-                self.ss_cnt = 0
-                self.press_n_flag = 1
+            self.ss_cnt = 0
+            self.press_n_flag = 1
 
             if len(faces) != 0:
                 for i, d in enumerate(faces):
@@ -135,24 +135,12 @@ class FaceRegister:
 
             self.draw_note(frame)
 
-            if k == ord('q'):
-                break
+            # if k == ord('q'):
+            #     break
 
             self.update_fps()
-            # cv.imshow("camera", frame)
 
     def run(self):
         cap = cv.VideoCapture(0)
         self.process(cap)
         cap.release()
-        cv.destroyAllWindows()
-
-
-# def main():
-#     logging.basicConfig(level=logging.INFO)
-#     face_recog = FaceRegister()
-#     face_recog.run()
-#
-#
-# if __name__ == '__main__':
-#     main()

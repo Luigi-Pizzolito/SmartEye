@@ -7,11 +7,6 @@ import threading
 
 app = Flask(__name__,template_folder='templates',static_folder='static')
 
-cap_gest = cv2.VideoCapture(0)
-cap_fall = cv2.VideoCapture('1.mp4')
-cap_face = cv2.VideoCapture('2.mp4')
-
-
 
 @app.route('/video_feed1')
 def video_feed1():
@@ -24,13 +19,11 @@ def video_feed2():
     cap_fall = cv2.VideoCapture("1.mp4")
     #Video streaming route. Put this in the src attribute of an img tag
     return Response(process_fall(cap_fall), mimetype='multipart/x-mixed-replace; boundary=frame')
-    return ""
 @app.route('/video_feed3')
 def video_feed3():
     cap_gest = cv2.VideoCapture("2.mp4")
     #Video streaming route. Put this in the src attribute of an img tag
     return Response(process_gesture(cap_gest), mimetype='multipart/x-mixed-replace; boundary=frame')
-    return ""
 
 
 @app.route('/')

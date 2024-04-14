@@ -155,7 +155,6 @@ def process_face(stream):
             Face_Recognizer.frame_cnt +=1
             # logging.debug("Frame"+str(Face_Recognizer.frame_cnt)+"starts")
             flag, img=stream.read()
-            # k=cv.waitKey(1)
             k=-1
 
             #检测人脸
@@ -269,25 +268,8 @@ def process_face(stream):
                 break
             Face_Recognizer.update_fps()
 
-            #cv.imshow("Camera",img)
             ret, buffer = cv.imencode('.jpg',img)
             img = buffer.tobytes()
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + img + b'\r\n')
-            # logging.debug("Frame ends\n\n")
         stream.release()
-        # cv.destroyAllWindows()
-
-# @app.route('/video_feed1')
-# def video_feed1():
-#     return Response(process(cap),mimetype='multipart/x-mixed-replace; boundary=frame')
-#
-# @app.route('/')
-# def index():
-#     return render_template('index.html')
-#
-#
-#
-# if __name__=='__main__':
-#     app.run(debug=True)
-    #main()
