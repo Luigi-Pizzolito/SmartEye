@@ -111,37 +111,31 @@ class GestureDetection:
                 gesture_str = "two"
         return gesture_str
 
-    def detect(self,cap):
-        while True:
-            ret, frame = cap.read()
-            frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-            frame = cv2.flip(frame, 1)
-            results = self.hands.process(frame)
-            frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
+def process_gesture(cap):
+    gesture_detector=GestureDetection()
+    while True:
+        ret, frame = cap.read()
+        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        frame = cv2.flip(frame, 1)
+        results = gesture_detector.hands.process(frame)
+        frame = cv2.cvtColor(frame, cv2.COLOR_RGB2BGR)
 
-            if results.multi_hand_landmarks:
-                for hand_landmarks in results.multi_hand_landmarks:
-                    self.mp_drawing.draw_landmarks(frame, hand_landmarks, self.mp_hands.HAND_CONNECTIONS)
-                    hand_local = []
-                    for i in range(21):
-                        x = hand_landmarks.landmark[i].x * frame.shape[1]
-                        y = hand_landmarks.landmark[i].y * frame.shape[0]
-                        hand_local.append((x, y))
-                    if hand_local:
-                        angle_list = self.hand_angle(hand_local)
-                        gesture_str = self.h_gesture(angle_list)
-                        cv2.putText(frame, gesture_str, (0, 100), 0, 1.3, (0, 0, 255), 3)
-            cv2.imshow('Hands', frame)
-            if cv2.waitKey(1) == ord('q'):
-                break
-        cap.release()
-        cv2.destroyAllWindows()
+        if results.multi_hand_landmarks:
+            for hand_landmarks in results.multi_hand_landmarks:
+                gesture_detector.mp_drawing.draw_landmarks(frame, hand_landmarks, gesture_detector.mp_hands.HAND_CONNECTIONS)
+                hand_local = []
+                for i in range(21):
+                    x = hand_landmarks.landmark[i].x * frame.shape[1]
+                    y = hand_landmarks.landmark[i].y * frame.shape[0]
+                    hand_local.append((x, y))
+                if hand_local:
+                    angle_list = gesture_detector.hand_angle(hand_local)
+                    gesture_str = gesture_detector.h_gesture(angle_list)
+                    cv2.putText(frame, gesture_str, (0, 100), 0, 1.3, (0, 0, 255), 3)
+        cv2.imshow('Hands', frame)
+        if cv2.waitKey(1) == ord('q'):
+            break
+    cap.release()
+    cv2.destroyAllWindows()
 
-    def main(self,cap):
-        self.detect(cap)
-
-if __name__ == '__main__':
-    stream=cv2.VideoCapture(0)
-    detector=GestureDetection()
-    detector.main(stream)
 

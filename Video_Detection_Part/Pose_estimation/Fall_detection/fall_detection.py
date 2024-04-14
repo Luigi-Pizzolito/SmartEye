@@ -10,8 +10,6 @@ import numpy as np
 
 
 
-
-
 class FallDetection:
     def __init__(self):
         self.counter = 0
@@ -55,67 +53,58 @@ class FallDetection:
         angle_2 = self.calculate_angle(right_hip, right_knee, right_ankle)
 
         return angle, angle_2
-    def process(self,cap):
+def process_fall(cap):
+    fall_detector=FallDetection()
+    with fall_detector.mp_pose.Pose(
+            min_detection_confidence=0.7, min_tracking_confidence=0.7
+    ) as pose:
+        while cap.isOpened():
+            ret, frame = cap.read()
+            if not ret:
+                break
 
+            image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+            image.flags.writeable = False
 
-        with self.mp_pose.Pose(
-                min_detection_confidence=0.7, min_tracking_confidence=0.7
-        ) as pose:
-            while cap.isOpened():
-                ret, frame = cap.read()
-                if not ret:
-                    break
+            results = pose.process(image)
 
-                image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-                image.flags.writeable = False
+            image.flags.writeable = True
+            image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
 
-                results = pose.process(image)
+            try:
+                angle, angle_2 = fall_detector.give_angle(results)
+                if angle > 160 and angle_2 > 160:
+                    fall_detector.stage = "up"
+                if (angle < 100 or angle_2 < 100):
+                    fall_detector.stage = "fall"
+                    fall_detector.counter = 1
+                    print(angle)
+            except:
+                pass
 
-                image.flags.writeable = True
-                image = cv2.cvtColor(image, cv2.COLOR_RGB2BGR)
+            cv2.rectangle(image, (0, 0), (225, 73), (245, 117, 16), -1)
 
-                try:
-                    angle, angle_2 = self.give_angle(results)
-                    if angle > 160 and angle_2 > 160:
-                        self.stage = "up"
-                    if (angle < 100 or angle_2 < 100):
-                        self.stage = "fall"
-                        self.counter = 1
-                        print(angle)
-                except:
-                    pass
+            cv2.putText(image, 'Fall', (15, 12),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.putText(image, str(fall_detector.counter),
+                        (10, 60),
+                        cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2, cv2.LINE_AA)
 
-                cv2.rectangle(image, (0, 0), (225, 73), (245, 117, 16), -1)
+            cv2.putText(image, 'Stage', (120, 12),
+                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
+            cv2.putText(image, fall_detector.stage,
+                        (120, 60),
+                        cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2, cv2.LINE_AA)
 
-                cv2.putText(image, 'Fall', (15, 12),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
-                cv2.putText(image, str(self.counter),
-                            (10, 60),
-                            cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2, cv2.LINE_AA)
+            fall_detector.mp_drawing.draw_landmarks(image, results.pose_landmarks, fall_detector.mp_pose.POSE_CONNECTIONS,
+                                      fall_detector.mp_drawing.DrawingSpec(color=(245, 117, 66), thickness=2, circle_radius=2),
+                                      fall_detector.mp_drawing.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2)
+                                      )
 
-                cv2.putText(image, 'Stage', (120, 12),
-                            cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1, cv2.LINE_AA)
-                cv2.putText(image, self.stage,
-                            (120, 60),
-                            cv2.FONT_HERSHEY_SIMPLEX, 2, (255, 255, 255), 2, cv2.LINE_AA)
+            cv2.imshow('Camera', image)
 
-                self.mp_drawing.draw_landmarks(image, results.pose_landmarks, self.mp_pose.POSE_CONNECTIONS,
-                                          self.mp_drawing.DrawingSpec(color=(245, 117, 66), thickness=2, circle_radius=2),
-                                          self.mp_drawing.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2)
-                                          )
+            if cv2.waitKey(1) == ord('q'):
+                break
 
-                cv2.imshow('Camera', image)
-
-                if cv2.waitKey(1) == ord('q'):
-                    break
-
-            cap.release()
-            cv2.destroyAllWindows()
-    def main(self,stream):
-        self.process(stream)
-
-
-if __name__=="__main__":
-    stream=cv2.VideoCapture("1.mp4")
-    detector=FallDetection()
-    detector.main(stream)
+        cap.release()
+        cv2.destroyAllWindows()

@@ -3,12 +3,17 @@
 # ********************************************************************
 
 import logging
-from Face_store import detector,predictor,face_reco_model
 import cv2 as cv
 import time
 import numpy as np
 import pandas as pd
 import os
+from Face_recognition.Face_store import detector,predictor,face_reco_model
+from flask import Flask,render_template,Response
+
+
+# app=Flask(__name__)
+
 
 class FaceRecognizer:
     def __init__(self):
@@ -57,7 +62,7 @@ class FaceRecognizer:
         self.reclassify_interval = 10
 
     def get_faces_database(self):
-        path_features_known_csv = "Data/features.csv"
+        path_features_known_csv = "Face_recognition/Data/features.csv"
         if os.path.exists(path_features_known_csv):
 
             csv_rd = pd.read_csv(path_features_known_csv, header=None)
@@ -70,7 +75,7 @@ class FaceRecognizer:
                     else:
                         features_someone_arr.append(csv_rd.iloc[i][j])
                 self.face_features_known_list.append(features_someone_arr)
-            
+
             return True
         else:
             print("'features_all.csv' not found!")
@@ -133,152 +138,156 @@ class FaceRecognizer:
                                  1,
                                  cv.LINE_AA)
 
-    def process(self,stream):
-        if self.get_faces_database():
-            while stream.isOpened():
-                self.frame_cnt +=1
-                logging.debug("Frame"+str(self.frame_cnt)+"starts")
-                flag, img=stream.read()
-                k=cv.waitKey(1)
-
-                #检测人脸
-                faces = detector(img)
-
-                #更新当前帧的人脸
-                self.last_frame_face_cnt=self.current_frame_face_cnt
-                self.current_frame_face_cnt=len(faces)
-
-                #更新人脸名字列表
-                self.last_frame_face_name_list = self.current_frame_face_name_list[:]
-
-                # 更新上一帧和当前帧的质心列表 / update frame centroid list
-                self.last_frame_face_centroid_list = self.current_frame_face_centroid_list
-                self.current_frame_face_centroid_list = []
-
-                if (
-                        self.current_frame_face_cnt == self.last_frame_face_cnt
-                        and self.reclassify_interval_cnt!= self.reclassify_interval
-                ):
-                    logging.debug("Scene 1: No face changed")
-                    self.current_frame_face_position_list=[]
-                    if "unknown" in self.current_frame_face_name_list:
-                        logging.debug("检测到未知人脸")
-                        self.reclassify_interval_cnt+=1
 
 
-                    if self.current_frame_face_cnt !=1:
-                        self.centroid_tracker()
 
-                    if self.current_frame_face_cnt !=0:
+    # def run(self):
+    #     cap=cv.VideoCapture(0)
+    #     self.process(cap)
+    #
+    #     cap.release()
+    #     cv.destroyAllWindows()
 
-                        #先画一个框
-                        for i ,d in enumerate(faces):
-                            self.current_frame_face_position_list.append(tuple(
-                                [faces[i].left(), int(faces[i].bottom() + (faces[i].bottom() - faces[i].top()) / 4)]))
-                            self.current_frame_face_centroid_list.append(
-                                [int(faces[i].left() + faces[i].right()) / 2,
-                                 int(faces[i].top() + faces[i].bottom()) / 2]
-                            )
-                            img=cv.rectangle(img,tuple([d.left(),d.top()]),tuple([d.right(),d.bottom()]),(255,255,255),thickness=4)
-                    #再写上名字
-                    for i in range(self.current_frame_face_cnt):
+def process_face(stream):
+    Face_Recognizer = FaceRecognizer()
+    cap=cv.VideoCapture(0)
+    if Face_Recognizer.get_faces_database():
+        while stream.isOpened():
+            Face_Recognizer.frame_cnt +=1
+            # logging.debug("Frame"+str(Face_Recognizer.frame_cnt)+"starts")
+            flag, img=stream.read()
+            k=cv.waitKey(1)
 
-                        img_rd = cv.putText(img, self.current_frame_face_name_list[i],
-                                             self.current_frame_face_position_list[i], self.font, 0.8, (0, 255, 255), 1,
-                                             cv.LINE_AA)
-                    self.draw_note(img)
+            #检测人脸
+            faces = detector(img)
 
+            #更新当前帧的人脸
+            Face_Recognizer.last_frame_face_cnt=Face_Recognizer.current_frame_face_cnt
+            Face_Recognizer.current_frame_face_cnt=len(faces)
+
+            #更新人脸名字列表
+            Face_Recognizer.last_frame_face_name_list = Face_Recognizer.current_frame_face_name_list[:]
+
+            # 更新上一帧和当前帧的质心列表 / update frame centroid list
+            Face_Recognizer.last_frame_face_centroid_list = Face_Recognizer.current_frame_face_centroid_list
+            Face_Recognizer.current_frame_face_centroid_list = []
+
+            if (
+                    Face_Recognizer.current_frame_face_cnt == Face_Recognizer.last_frame_face_cnt
+                    and Face_Recognizer.reclassify_interval_cnt!= Face_Recognizer.reclassify_interval
+            ):
+                # logging.debug("Scene 1: No face changed")
+                Face_Recognizer.current_frame_face_position_list=[]
+                if "unknown" in Face_Recognizer.current_frame_face_name_list:
+                    # logging.debug("检测到未知人脸")
+                    Face_Recognizer.reclassify_interval_cnt+=1
+
+
+                if Face_Recognizer.current_frame_face_cnt !=1:
+                    Face_Recognizer.centroid_tracker()
+
+                if Face_Recognizer.current_frame_face_cnt !=0:
+
+                    #先画一个框
+                    for i ,d in enumerate(faces):
+                        Face_Recognizer.current_frame_face_position_list.append(tuple(
+                            [faces[i].left(), int(faces[i].bottom() + (faces[i].bottom() - faces[i].top()) / 4)]))
+                        Face_Recognizer.current_frame_face_centroid_list.append(
+                            [int(faces[i].left() + faces[i].right()) / 2,
+                             int(faces[i].top() + faces[i].bottom()) / 2]
+                        )
+                        img=cv.rectangle(img,tuple([d.left(),d.top()]),tuple([d.right(),d.bottom()]),(255,255,255),thickness=4)
+                #再写上名字
+                for i in range(Face_Recognizer.current_frame_face_cnt):
+
+                    img_rd = cv.putText(img, Face_Recognizer.current_frame_face_name_list[i],
+                                         Face_Recognizer.current_frame_face_position_list[i], Face_Recognizer.font, 0.8, (0, 255, 255), 1,
+                                         cv.LINE_AA)
+                Face_Recognizer.draw_note(img)
+
+            else:
+                # logging.debug("Scene 2: Faces cnt changes in this frame")
+                Face_Recognizer.current_frame_face_position_list = []
+                Face_Recognizer.current_frame_face_X_e_distance_list = []
+                Face_Recognizer.current_frame_face_feature_list = []
+                Face_Recognizer.reclassify_interval_cnt = 0
+
+                #若当前没有人脸
+                if Face_Recognizer.current_frame_face_cnt ==0:
+                    # logging.debug("No faces in this frame")
+                    Face_Recognizer.current_frame_face_name_list=[]
                 else:
-                    logging.debug("Scene 2: Faces cnt changes in this frame")
-                    self.current_frame_face_position_list = []
-                    self.current_frame_face_X_e_distance_list = []
-                    self.current_frame_face_feature_list = []
-                    self.reclassify_interval_cnt = 0
+                    # logging.debug("Get faces in this frame")
+                    Face_Recognizer.current_frame_face_name_list=[]
+                    for i in range(len(faces)):
+                        shape=predictor(img,faces[i])
+                        Face_Recognizer.current_frame_face_feature_list.append(
+                            face_reco_model.compute_face_descriptor(img,shape)
+                        )
+                        Face_Recognizer.current_frame_face_name_list.append("unknown")
 
-                    #若当前没有人脸
-                    if self.current_frame_face_cnt ==0:
-                        logging.debug("No faces in this frame")
-                        self.current_frame_face_name_list=[]
-                    else:
-                        logging.debug("Get faces in this frame")
-                        self.current_frame_face_name_list=[]
-                        for i in range(len(faces)):
-                            shape=predictor(img,faces[i])
-                            self.current_frame_face_feature_list.append(
-                                face_reco_model.compute_face_descriptor(img,shape)
-                            )
-                            self.current_frame_face_name_list.append("unknown")
+                    for j in range(len(faces)):
+                        # logging.debug("  For face %d in current frame:", j + 1)
+                        Face_Recognizer.current_frame_face_centroid_list.append(
+                            [int(faces[j].left() + faces[j].right()) / 2,
+                             int(faces[j].top() + faces[j].bottom()) / 2])
 
-                        for j in range(len(faces)):
-                            logging.debug("  For face %d in current frame:", j + 1)
-                            self.current_frame_face_centroid_list.append(
-                                [int(faces[j].left() + faces[j].right()) / 2,
-                                 int(faces[j].top() + faces[j].bottom()) / 2])
+                        Face_Recognizer.current_frame_face_X_e_distance_list = []
 
-                            self.current_frame_face_X_e_distance_list = []
+                        Face_Recognizer.current_frame_face_position_list.append(tuple(
+                            [faces[j].left(), int(faces[j].bottom() + (faces[j].bottom() - faces[j].top()) / 4)]))
 
-                            self.current_frame_face_position_list.append(tuple(
-                                [faces[j].left(), int(faces[j].bottom() + (faces[j].bottom() - faces[j].top()) / 4)]))
-
-                            # For every faces detected, compare the faces in the database
-                            for i in range(len(self.face_features_known_list)):
-                                # 如果 q 数据不为空
-                                if str(self.face_features_known_list[i][0]) != '0.0':
-                                    e_distance_tmp = self.distance(
-                                        self.current_frame_face_feature_list[k],
-                                        self.face_features_known_list[i])
-                                    logging.debug("      with person %d, the e-distance: %f", i + 1, e_distance_tmp)
-                                    self.current_frame_face_X_e_distance_list.append(e_distance_tmp)
-                                else:
-                                    self.current_frame_face_X_e_distance_list.append(999999999)
-
-
-                            similar_person_num=self.current_frame_face_X_e_distance_list.index(
-                                min(self.current_frame_face_X_e_distance_list)
-                            )
-
-
-                            if min(self.current_frame_face_X_e_distance_list) < 0.4:
-                                self.current_frame_face_name_list[j] = self.face_name_known_list[similar_person_num]
-                                logging.debug("  Face recognition result: %s",
-                                              self.face_name_known_list[similar_person_num])
+                        # For every faces detected, compare the faces in the database
+                        for i in range(len(Face_Recognizer.face_features_known_list)):
+                            # 如果 q 数据不为空
+                            if str(Face_Recognizer.face_features_known_list[i][0]) != '0.0':
+                                e_distance_tmp = Face_Recognizer.distance(
+                                    Face_Recognizer.current_frame_face_feature_list[k],
+                                    Face_Recognizer.face_features_known_list[i])
+                                # logging.debug("      with person %d, the e-distance: %f", i + 1, e_distance_tmp)
+                                Face_Recognizer.current_frame_face_X_e_distance_list.append(e_distance_tmp)
                             else:
-                                logging.debug("  Face recognition result: Unknown person")
-
-                        self.draw_note(img)
-
-                if k == ord('q'):
-                    break
-                self.update_fps()
-                cv.imshow("Camera",img)
-                logging.debug("Frame ends\n\n")
+                                Face_Recognizer.current_frame_face_X_e_distance_list.append(999999999)
 
 
-    def run(self):
-        cap=cv.VideoCapture(0)
-        self.process(cap)
+                        similar_person_num=Face_Recognizer.current_frame_face_X_e_distance_list.index(
+                            min(Face_Recognizer.current_frame_face_X_e_distance_list)
+                        )
 
+
+                        if min(Face_Recognizer.current_frame_face_X_e_distance_list) < 0.4:
+                            Face_Recognizer.current_frame_face_name_list[j] = Face_Recognizer.face_name_known_list[similar_person_num]
+                            # logging.debug("  Face recognition result: %s",
+                            #               Face_Recognizer.face_name_known_list[similar_person_num])
+                        else:
+                            pass
+                            # logging.debug("  Face recognition result: Unknown person")
+
+                    Face_Recognizer.draw_note(img)
+
+            if k == ord('q'):
+                break
+            Face_Recognizer.update_fps()
+
+            #cv.imshow("Camera",img)
+            ret, buffer = cv.imencode('.jpg',img)
+            img = buffer.tobytes()
+            yield (b'--frame\r\n'
+                   b'Content-Type: image/jpeg\r\n\r\n' + img + b'\r\n')
+            # logging.debug("Frame ends\n\n")
         cap.release()
         cv.destroyAllWindows()
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-def main():
-    logging.basicConfig(level=logging.INFO)
-    Face_Recognizer = FaceRecognizer()
-    Face_Recognizer.run()
-
-
-if __name__=='__main__':
-    main()
+# @app.route('/video_feed1')
+# def video_feed1():
+#     return Response(process(cap),mimetype='multipart/x-mixed-replace; boundary=frame')
+#
+# @app.route('/')
+# def index():
+#     return render_template('index.html')
+#
+#
+#
+# if __name__=='__main__':
+#     app.run(debug=True)
+#     #main()
