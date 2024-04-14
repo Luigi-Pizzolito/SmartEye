@@ -11,13 +11,11 @@ import numpy as np
 import logging
 import cv2 as cv
 
+
 path_images_from_camera="Data/data_faces/"
 detector=dlib.get_frontal_face_detector()
-
 #特征检测
 predictor=dlib.shape_predictor("Data/data_dlib/shape_predictor_68_face_landmarks.dat")
-
-
 #人脸识别
 face_reco_model=dlib.face_recognition_model_v1("Data/data_dlib/dlib_face_recognition_resnet_model_v1.dat")
 
