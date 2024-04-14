@@ -101,10 +101,10 @@ def process_fall(cap):
                                       fall_detector.mp_drawing.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2)
                                       )
 
-            cv2.imshow('Camera', image)
+            # cv2.imshow('Camera', image)
 
-            if cv2.waitKey(1) == ord('q'):
-                break
+            # if cv2.waitKey(1) == ord('q'):
+            #     break
 
         cap.release()
-        cv2.destroyAllWindows()
+        # cv2.destroyAllWindows()

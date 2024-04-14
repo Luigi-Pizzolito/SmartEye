@@ -150,13 +150,13 @@ class FaceRecognizer:
 
 def process_face(stream):
     Face_Recognizer = FaceRecognizer()
-    cap=cv.VideoCapture(0)
     if Face_Recognizer.get_faces_database():
         while stream.isOpened():
             Face_Recognizer.frame_cnt +=1
             # logging.debug("Frame"+str(Face_Recognizer.frame_cnt)+"starts")
             flag, img=stream.read()
-            k=cv.waitKey(1)
+            # k=cv.waitKey(1)
+            k=-1
 
             #检测人脸
             faces = detector(img)
@@ -275,8 +275,8 @@ def process_face(stream):
             yield (b'--frame\r\n'
                    b'Content-Type: image/jpeg\r\n\r\n' + img + b'\r\n')
             # logging.debug("Frame ends\n\n")
-        cap.release()
-        cv.destroyAllWindows()
+        stream.release()
+        # cv.destroyAllWindows()
 
 # @app.route('/video_feed1')
 # def video_feed1():
