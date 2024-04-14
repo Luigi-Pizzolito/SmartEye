@@ -12,7 +12,7 @@ cap_face = cv2.VideoCapture('2.mp4')
 
 
 
-@app.route('/video_fee1')
+@app.route('/video_feed1')
 def video_feed1():
     #Video streaming route. Put this in the src attribute of an img tag
     return Response(process_face(cap_face), mimetype='multipart/x-mixed-replace; boundary=frame')
@@ -20,7 +20,7 @@ def video_feed1():
 def video_feed2():
     #Video streaming route. Put this in the src attribute of an img tag
     return Response(process_fall(cap_fall), mimetype='multipart/x-mixed-replace; boundary=frame')
-@app.route('/video_fee3')
+@app.route('/video_feed3')
 def video_feed3():
     #Video streaming route. Put this in the src attribute of an img tag
     return Response(process_gesture(cap_gest), mimetype='multipart/x-mixed-replace; boundary=frame')
