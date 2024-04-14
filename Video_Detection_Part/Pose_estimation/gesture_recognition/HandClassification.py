@@ -133,9 +133,13 @@ def process_gesture(cap):
                     gesture_str = gesture_detector.h_gesture(angle_list)
                     cv2.putText(frame, gesture_str, (0, 100), 0, 1.3, (0, 0, 255), 3)
         # cv2.imshow('Hands', frame)
-        # if cv2.waitKey(1) == ord('q'):
-            # break
+        ret, buffer = cv2.imencode('.jpg', frame)
+        frame = buffer.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        if cv2.waitKey(1) == ord('q'):
+            break
     cap.release()
-    # cv2.destroyAllWindows()
+    cv2.destroyAllWindows()
 
 

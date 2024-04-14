@@ -12,7 +12,7 @@ from Face_recognition.Face_store import detector,predictor,face_reco_model
 from flask import Flask,render_template,Response
 
 
-# app=Flask(__name__)
+app=Flask(__name__)
 
 
 class FaceRecognizer:
@@ -290,4 +290,4 @@ def process_face(stream):
 #
 # if __name__=='__main__':
 #     app.run(debug=True)
-#     #main()
+    #main()
