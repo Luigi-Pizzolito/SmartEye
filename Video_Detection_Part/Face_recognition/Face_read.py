@@ -139,7 +139,7 @@ class FaceRegister:
                 break
 
             self.update_fps()
-            cv.imshow("camera", frame)
+            # cv.imshow("camera", frame)
 
     def run(self):
         cap = cv.VideoCapture(0)

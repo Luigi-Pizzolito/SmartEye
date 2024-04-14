@@ -4,7 +4,7 @@ from flask import Flask, Response
 app = Flask(__name__)
 
 def webcam_stream():
-    cap = cv2.VideoCapture(0)  # Use the first webcam (index 0)
+    cap = cv2.VideoCapture("1.mp4")  # Use the first webcam (index 0)
     cap.set(cv2.CAP_PROP_FPS, 5)
 
     while True:
