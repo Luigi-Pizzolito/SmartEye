@@ -1,0 +1,349 @@
+<!-- https://v5.bootcss.com/ -->
+<!-- Author: 2024 Cao Yuluan (https://github.com/cyuluan27) -->
+<!-- not finished yet, add some docs for this project -->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='img/favicon.ico') }}">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1"/>
+    <title>Docs for SmartEye</title>
+    <meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport'/>
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css?family=Playfair+Display:400,700|Source+Sans+Pro:400,700" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU" crossorigin="anonymous">
+    <!-- Main CSS -->
+    <link href="{{ url_for('static', filename='css/main.css') }}" rel="stylesheet"/>
+    <!-- Docs CSS -->
+    <link href="{{ url_for('static', filename='css/vendor/bootstrap-toc.css') }}" rel="stylesheet"/>
+    <link href="{{ url_for('static', filename='css/vendor/prism.css') }}" rel="stylesheet"/>
+</head>
+    
+<body>  
+    
+    
+<!----------------------------------------------------------------------
+End fixed sidebar
+------------------------------------------------------------------------>
+
+<nav id="toc" class="fixedsidebar d-none d-lg-block">   
+    <h5 class="mt-4 mb-4 pt-1 pl-4"><a class="text-dark navbar-brand" href="/work/Detect/Face_recognition/static"><strong>SmartEye</strong> </a></h5>
+    <!-- <a target="_blank" href="https://www.buymeacoffee.com/sal" class="btn btn-secondary mb-4 btn-sm btn-round"><i class="fas fa-coffee mr-1"></i> Buy me a coffee</a> -->
+</nav>
+    
+<!----------------------------------------------------------------------
+End fixed sidebar
+------------------------------------------------------------------------> 
+    
+       
+<main class="content-withfixedsidebar">
+    
+    
+<!----------------------------------------------------------------------
+NAVBAR (remove topnav if you don't want changed nav background on scroll)
+------------------------------------------------------------------------>
+<nav class="topnav navbar navbar-expand-lg navbar-light bg-white fixed-top">
+<div class="container">
+	<a class="navbar-brand d-lg-none" href="/work/Detect/Face_recognition/static"><i class="fas fa-anchor mr-2"></i><strong>SmartEye</strong></a>
+	<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
+	<span class="navbar-toggler-icon"></span>
+	</button>
+	<div class="navbar-collapse collapse" id="navbarColor02">
+		<ul class="navbar-nav mr-auto d-flex align-items-center">
+			<li class="nav-item">
+			<a class="nav-link" href="/work/Detect/Face_recognition/static">&larr; Back to Home</a>
+			</li>
+		</ul>
+		<ul class="navbar-nav ml-auto d-flex align-items-center">			
+			<li class="nav-item highlight">
+			<a class="nav-link" target="_blank" href="https://www.wowthemes.net/mundana-free-html-bootstrap-template">Get this project</a>
+			</li>
+		</ul>
+	</div>
+</div>
+</nav>
+<!-- End Navbar -->
+    
+<!-------------------------------------
+HEADER
+--------------------------------------->
+<div class="jumbotron jumbotron-fluid mb-3 pb-0 pt-5 bg-white position-relative">
+	<div class="container h-100 tofront">
+		<div class="row align-items-center justify-content-center text-center">
+			<div class="col-md-10">
+				<h1 class="display-5 text-dark">Documentation</h1>
+			</div>
+		</div>
+	</div>
+</div>
+<!--- END HEADER -->
+
+<!-- DOCS CONTENT -->
+<div class="container pt-3 pb-5 mb-5">
+	<div class="row justify-content-center">
+      
+<div class="col-lg-11">
+<div id="docsarea" class="font-weight-normal">
+    
+<p class="lead">
+    Hey there! You’re looking at <a href="/work/Detect/Face_recognition/static">SmartEye</a> official documentation. SmartEye offers a versatile and scalable solution for addressing various aspects of home security, monitoring, and smart device control, demonstrating the potential of integrating advanced technologies to enhance residential safety and convenience. Let’s begin!
+</p>
+    
+    
+<div class="container text-center">
+	<a href="index.html"><img src="{{ url_for('static', filename='img/web1.png') }}" class="shadow-lg" style="max-width: 25vw;"></a>
+</div>
+
+
+    
+<h1>Abstract</h1>
+<!-- <strong><span style="color:#ad6edd;"></span></strong> -->
+<p>
+    In this study, we present a comprehensive system architecture aimed at enhancing home security, monitoring, and smart device control. Leveraging <strong><span style="color:#35bdff;">ESP32</span></strong> microcontrollers, the system integrates image data collection from various sources, including cameras, coupled with advanced image processing techniques such as MMPose for human key-point detection and face recognition. Additionally, gesture recognition is implemented using another ESP32-CAM module. 
+</p>
+
+<p>
+    The system employs <strong><span style="color:#35bdff;">MQTT protocol</span></strong> for seamless communication between devices, enabling remote control of smart home devices and facilitating real-time data transmission. 
+    <strong><span style="color:#35bdff;">Face recognition</span></strong> serves as a robust security measure, capable of detecting intruders and alerting homeowners of potential threats. Human key-point detection plays a pivotal role in ensuring individual safety, particularly in scenarios such as detecting falls for elderly individuals or alerting authorities during emergencies. 
+</p>
+
+<p>
+    Furthermore, the implementation of a centralized <strong> <span style="color:#35bdff;">web interface</span></strong> provides users with convenient access to live video feeds and control over connected smart devices. This interface serves as a centralized control hub, offering users a streamlined experience for monitoring and managing their home environment remotely. The developed system offers a versatile and scalable solution for addressing various aspects of home security, monitoring, and smart device control, demonstrating the potential of integrating advanced technologies to enhance residential safety and convenience.
+</p>
+
+<p>
+    <strong>Index Terms:</strong> ESP32, IoT, MQTT protocol, pose detection, DETR, remote control.
+</p>
+
+
+<h1>Background and importance of the research</h1>    
+
+<p>
+TODAY, population aging has become a common challenge faced by countries around the world. As the most populous developing country globally, China has transitioned into an aging society since the beginning of the 21st century. Up to now, she has entered a stage of profound aging, becoming one of the countries with the fastest aging population rates in the world. Population aging has exerted significant impacts on various aspects of China’s economic and social development [1]. In 2022, General Secretary Xi made a redeployment of the aging issue at the 20th CPC National Congress, emphasizing the implementation of proactive national strategies to address population aging. This includes developing modern elderly care services and basic elder-care industries, further optimizing services for elderly individuals living alone, and promoting access to basic elder-care services for all elderly individuals.
+</p>  
+
+<p>
+    Being described figuratively as “empty nesters”, elderly people living alone need <strong>multi-view</strong> attention on their personal security and health condition. Researchers conducted a survey using a stratified cluster sampling method on 1409 empty-nest elderly individuals in northern Jiangsu Province. The study found that the elderly self-rated their health as poor, with a 2-week illness rate of 32.9% and a chronic illness rate of 59.9%. Furthermore, 44.9% of the elderly regularly take medication, and 7.0% experience impairments in their daily life activities [2]. 
+</p>
+
+<p>
+    In this context, our research mainly concerns the elderly’s indoor safety. In this experiment, a room installs multiple cameras, each of which transmits its image flows using IoT methods with a embedded ESP32, a one-chip computer made in China, specialized in Wi-Fi and Bluetooth communication. And a remote controlled smart device, such as a light or a stereo, is too placed in the room. These interconnected cameras and devices are expected to accomplish 3 tasks: pose detection, face recognition and gesture detection.
+</p>        
+
+<h1>Literature review</h1>
+<h2>Pose Detection</h2>
+<p>Three-dimensional human pose estimation(3D HPE) involves estimating the articulated 3D joint locations of a human body from an image or video. Due to its widespread applications in a great variety of areas, such
+as human motion analysis, human–computer interaction, robots, 3D human pose estimation has recently
+attracted increasing attention in the computer vision community. Driven by powerful deep learning techniques and recently collected large-scale datasets, human pose estimation has continued making great progress. A large number of approaches, with many based on deep learning, have been developed over the past decade, largely advancing the performance on existing benchmarks.</p>
+
+<p>To build a model estimating the articulated joint locations of a human, several methods have been proposed. Generally speaking, the human body structure is very complex, and different methods adopt different models based on their specific considerations. Nevertheless, the most commonly used models are the skeleton and shape models[3]. Besides, a new pose estimation is a surface-based representation called DensePose, which is worth mentioning due to the extension of the existing pose representation.</p>
+
+<p>The skeleton model is commonly used in 2D human pose estimation and is naturally extended to 3D. The human skeleton model is treated as a tree structure, which contains many key-points of the human body and connects natural adjacent joints using edges between key joints, as shown in Fig.1. </p>
+
+<div class="row justify-content-between mb-3">
+	<div class="col-md-6">
+		<img width="400" src="./assets/img/docs/Fig1.png">
+		<div class="pt-1 card-text text-muted small">
+		Fig.1 Human body skeleton from the MPI-INF-3DHP dataset, with the root joint 15, O1 (blue): relative to first order and O2 (orange): relative to second order parents in
+		the kinematic skeleton hierarchy. (For interpretation of the references to colour in this
+		figure legend, the reader is referred to the web version of this article.
+	    </div>
+	</div>
+	<div class="col-md-6">
+		<img width="400" src="./assets/img/docs/Fig2.png">
+		<div class="pt-1 card-text text-muted small">
+			Fig.2 The SMPL model. The white points are pre-defined
+		key-points.
+	    </div>
+	</div>
+</div>
+
+
+<p>For the shape model, recent works use the skinned multi-person linear (SMPL) model, as shown in Fig.2, to estimate 3D human body joints. The human skin is represented as a triangulated mesh with 6890 vertices, which is parametrized by shape and pose parameters. The shape parameters are used to model the body proportions, height and weight, while the pose parameters are used to model the determined
+deformation of the body. The 3D pose positions can be estimated by learning the shape and body parameters.</p>
+
+<p>3D MPE methods can be categorized into algorithms from a monocular image and that from multi-views.  3D human pose estimation based on a frame does not use temporal information, that is, only uses a monocular image or multi-view images at a single time. Thanks to its
+great advantages, e.g. suitable for indoor and outdoor use, it has been widely studied recently. 
+Recovering a 3D human pose from a single image is appealing
+due to the low requirement of the image, but it suffers from an ill-defined problem that different 3D poses may correspond to the same 2D images. Besides, based on the setting, using temporal or multi-view information to reduce the ambiguity cannot be achieved during the
+recovering process. Therefore, significant research has been done and several methods have been developed to solve these problems. Inspired by the rapid development of 2D human pose estimation
+algorithms, many works have tried to utilize 2D pose estimation results
+for 3D human pose estimation to improve in-the-wild generalization
+performance.  For example, Martinez et al. (2017) propose a simple
+baseline focusing on lifting 2D poses to 3D with a simple yet very
+effective neural network, which popularizes the research on lifting
+2D pose to 3D space, shown in Fig.3. </p>
+
+<div class="container text-center">
+<img src="assets/img/docs/Fig3.png" class="shadow-sm" width="800">
+</div>
+<div class="pt-1 pb-3 card-text text-muted small">
+	Fig.3 A diagram of our approach. The building block of our network is a linear layer, followed by batch normalization, dropout and a RELU activation. This is repeated twice, and the two blocks are wrapped in a residual connection. The outer block is repeated twice. The input to our system is an array of 2d joint positions, and the output is a series of joint positions in 3d[8]
+ </div>
+
+
+<p>To fuse multi-view information, different strategies have been designed. For example, Pavlakos et al. (2017b) combine the 2D joint
+heat-maps of each view using a 3D pictorial structures model. These
+heat-maps are back projected to a common discretized 3D space and the
+prior distribution is modelled by constraining the lengths of the limbs and the data likelihood by the heat-maps, show in Fig.4.</p>
+
+<div class="container text-center">
+<img src="assets/img/docs/Fig4.png" class="shadow-sm" width="600">
+</div>
+<div class="pt-1 pb-3 card-text text-muted small">
+	Fig.4 Overview of our approach for harvesting pose
+		annotations. Given a multi-view camera setup, we use a
+		generic ConvNet for 2D human pose estimation, and
+		produce single-view pose predictions in the form of 2D
+		heat-maps for each view. The single-view predictions are
+		combined optimally using a 3D Pictorial Structures model
+		to yield 3D pose estimates with associated per joint uncertainties. The pose estimate is further probed to determine
+		reliable joints to be used as annotations[9]
+ </div>
+
+
+<p>The techniques used in the process of modelling also come out with different and elegant ideas. Junting Dong et al. address the problem of 3D pose estimation for multiple people in a few calibrated camera views. Their key idea is to use a multi-way matching algorithm to cluster the detected 2D poses in all views. Each resulting cluster encodes 2D poses of the same person across different views and consistent correspondences across the key-points, from which the 3D pose of each person can be effectively inferred[4]. </p>
+
+<p>Combining geometric and appearance cues for cross-view matching, the proposed approach, known as MVPose achieves significant performance, while being efficient for real-time applications. Based on voxel and its implementation, VoxelPose is presented to estimate 3D poses of multiple people from multiple camera views(Hanyue Tu et al.)[5]. </p>
+<p>VoxelPose directly operates in the 3D space therefore avoids making incorrect decisions in each camera view. To achieve this goal, features in all camera views are aggregated in the 3D voxel space and fed into Cuboid Proposal Network (CPN) to localize all people. Then they propose Pose Regression Network (PRN) to estimate a detailed 3D pose for each proposal. Similar to image recognition, 3D HPE tasks can be divided into two stages, which are studied by Siae Wu et al.\cite{ref6}, with Graph Neural Network(GNN). Following the top-down paradigm, they decompose the task into two stages, i.e. person localization and pose estimation. Both stages are processed in coarse-to-fine manners. And they propose three task-specific graph neural networks for effective message passing. For 3D person localization, we first use Multi-view Matching Graph Module (MMG) to learn the cross-view association and recover coarse human proposals. The Center Refinement Graph Module (CRG) further refines the results via flexible point based prediction. </p>
+<p>For 3D pose estimation, the Pose Regression Graph Module (PRG) learns both the multi-view geometry and structural relations between human joints. With the lately deep learning model Transformer, Tao Wang et al. propose Multi-view Pose transformer (MvP), directly estimating the essential 3D points of multiple people\cite{ref7}.  Instead of estimating 3D joint locations from costly volumetric representation or reconstructing the per-person 3D pose from multiple detected 2D poses as in previous methods, MvP directly regresses the multi-person
+3D poses in a clean and efficient way, without relying on intermediate tasks. Specifically, MvP represents skeleton joints as learnable query embeddings and let them progressively attend to and reason over the multi-view information from the input images to directly regress the actual 3D joint locations. With advanced techniques, MvP achieves the latest SOTA(Stage-of-the-Art) in 2021.</p>
+
+<p>There are introductions to generally used 3D  pose estimation datasets, which are often gathered by a motion capture system.</p>
+
+<p>Human3.6M is one of the largest motion capture datasets, which consists of 3.6 million human poses and corresponding images. The dataset provides accurate 3D human joint positions and synchronized high-resolution videos acquired by a motion capture system at 50 Hz. The dataset contains activities by 11 professional actors in 17 scenarios: discussion, smoking, taking photo, talking on the phone, etc., from 4 different camera views.</p>
+
+<div class="card-group">
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">VoxelPose on the Campus</h4>
+      <p class="card-text">Campus uses three calibrated cameras to capture the scene of three people interacting in an outdoor environment (campus).  Each view provides 2000 frames of images, and typically uses frames numbered [350, 470] and [650, 750] as a test to evaluate the accuracy of human key-point estimation using PCP. Fig.5 shows the visualization results of VoxelPose on the Campus dataset.</p>
+      <img src="./assets/img/docs/Fig5.png" class="shadow-sm" alt="Fig.5 Visualization results of VoxelPose on the Campus dataset">
+	  <div class="pt-1 card-text text-muted small">
+ 	  Fig.5 Visualization results of VoxelPose on the Campus dataset
+	  </div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">CMU Panoptic</h4>
+      <p class="card-text">CMU Panoptic is a large-scale multi-view image dataset, providing 480 VGA cameras, 31 different views of high-definition (HD) images, 10 different views of Kinect data, and corresponding camera parameters, including 65 videos (total length of 5.5 hours) and more than 1.5 million 3D skeletons. The dataset contains multiple multi-person scenes and is a commonly used benchmark dataset for multi-view 3D human pose estimation tasks. VoxelPose first conducted quantitative experiments on CMU Panoptic, using images from five views numbered (3, 6, 12, 13, 23), with training and testing sets containing different video sequences. Generally, the average Euclidean distance (MPJPE) between the predicted coordinates of all key points and the true coordinates is used to evaluate the performance of the algorithm.  VoxelPose also proposed an AP metric based on MPJPE, which was adopted by subsequent work.</p>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-body">
+      <h4 class="card-title">Shelf data</h4>
+      <p class="card-text">Shelf data uses five calibrated cameras to capture content consisting of four people disassembling a shelf at close range.  Each view provides 3200 frames of images, and each view has severe occlusion. Typically, frames numbered [300, 600] are used as a test, and PCP is also used to evaluate the predicted 3D human key-points. Fig.6 shows the visualization results of VoxelPose on the Shelf dataset.</p>
+      <img src="./assets/img/docs/Fig6.png" class="shadow-sm" alt="Visualization results of VoxelPose on the Shelf dataset">
+	  <div class="pt-1 card-text text-muted small">
+ 	  Fig.6 Visualization results of VoxelPose on the Shelf dataset
+	  </div>      
+    </div>
+  </div>
+</div>
+
+<h2>Face recognition</h2>
+
+<p>Over the past few decades, interest in theories and algorithms for face recognition has been
+growing rapidly. Video surveillance, criminal identification, building access control, and unmanned
+and autonomous vehicles are just a few examples of concrete applications that are gaining attraction
+among industries. Systems that identify people based on their biological characteristics are very attractive because they are easy to use. The human face is composed of different structures and characteristics. For this reason, in recent years, it has become one of the most widely used biometric authentication systems, given its potential in many applications and fields (surveillance, home security, border control, and so on). </p>
+
+<p>Face recognition is generally considered as the combination of three basic techniques: face detection, Feature extraction and face recognition (classification), though the first two steps of which are not honoured with equal significances as facial-recognition methods.</p>
+
+<div class="container text-center">
+<img src="assets/img/docs/Fig7.png" class="shadow-sm" width="500">
+<div class="pt-1 pb-3 card-text text-muted small">
+	Fig.7 Face recognition structure
+</div>
+</div>
+
+
+
+<p></p>
+
+<p></p>
+
+<p></p>
+
+<p></p>
+
+<p></p>
+
+
+    
+</div><!-- End docs -->
+</div>
+</div>
+</div>
+<!-- End DOCS -->
+    
+
+<!--------------------------------------
+FOOTER
+--------------------------------------->
+<footer class="bg-light pb-5 pt-4">
+<div class="container">
+	<div class="row justify-content-center text-center">
+		<div class="col-md-12">			
+			<span class="d-block mt-3 text-muted">&copy;
+			<script>document.write(new Date().getFullYear())</script>
+			 SmartEye by ECS team
+            </span>
+		</div>
+	</div>
+</div>
+</footer>
+    
+    
+</main>
+<!--- end main -->
+    
+    
+<!--------------------------------------
+JAVASCRIPTS
+--------------------------------------->    
+<script src="./assets/js/vendor/jquery.min.js" type="text/javascript"></script>
+<script src="./assets/js/vendor/popper.min.js" type="text/javascript"></script>
+<script src="./assets/js/vendor/bootstrap.min.js" type="text/javascript"></script>
+<script src="./assets/js/functions.js" type="text/javascript"></script>
+    
+<!-- Docs -->
+<script src="./assets/js/vendor/prism.js" type="text/javascript"></script>
+<script src="./assets/js/vendor/bootstrap-toc.js" type="text/javascript"></script>
+<script>
+    $(function() {
+      new ClipboardJS('.btn');
+      var navSelector = '#toc';
+      var $myNav = $(navSelector);
+      Toc.init({
+          $nav: $('#toc'),
+          $scope: $('#docsarea')
+        });
+      $('body').scrollspy({
+        target: navSelector
+      });        
+    });
+</script>
+
+    
+
+<!-- Tooltips -->
+<script> $(function () { $('[data-toggle="tooltip"]').tooltip() }) </script>
+    
+<!-- Popovers -->    
+<script> 
+$(function () {
+$('[data-toggle="popover"]').popover()
+})
+$('.popover-dismiss').popover({
+  trigger: 'focus'
+})
+</script>
+
+</body>
+</html>
+
