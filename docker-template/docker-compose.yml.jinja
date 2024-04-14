@@ -119,8 +119,6 @@ services:
       - kafka-net
     depends_on:
       - kafka
-    ports: 
-      - 6060:6060
     restart: unless-stopped
   {%- endfor %}
     # deploy:
@@ -144,6 +142,7 @@ services:
       - kafka-net
     ports:
       - 8095:8095
+      - 6060:6060
     depends_on:
       - kafka
     restart: unless-stopped

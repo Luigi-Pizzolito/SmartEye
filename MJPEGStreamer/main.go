@@ -38,6 +38,11 @@ import (
 	"encoding/json"
 	"net/http"
 	"sync"
+
+	//! profiler deps
+	_ "net/http/pprof"
+
+	"github.com/felixge/fgprof"
 )
 
 var (
@@ -52,6 +57,11 @@ var (
 )
 
 func main() {
+	//! profiler insert
+	http.DefaultServeMux.Handle("/debug/fgprof", fgprof.Handler())
+	go func() {
+		log.Println(http.ListenAndServe(":6060", nil))
+	}()
 	// params
 	addr := ":8095"
 	kafkaBrokers := []string{"kafka:9092"}
