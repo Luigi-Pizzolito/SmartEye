@@ -161,29 +161,27 @@ services:
   # Python AI Video Processing
   # Kafka Camera Streams -> Python AI -> Kafka AI Streams + Data
   # for face, pose and gesture recognition
-  # ai-process-kafka-{{ camera }}:
-  #   build:
-  #     context: ./AIProcess
-  #     dockerfile: ../dockerfiles/AIProcess.Dockerfile
-  #   networks:
-  #     - kafka-net
-  #   depends_on:
-  #     - kafka
-  #     - mjpegstreamer
-  #   volumes:
-  #     - ./img:/app/img
-  #   environment:
-  #     - KAFKA_SERVERS=kafka:9092
-  #     - MJPEG_SERVER=mjpegstreamer:8095
-  #     - IN_TOPIC={{ camera }}-stream
-  #     - OUT_TOPIC_FACE={{ camera }}-faces-stream
-  #     - DATA_TOPIC_FACE={{ camera }}-faces-data
-  #     - OUT_TOPIC_POSE={{ camera }}-pose-stream
-  #     - DATA_TOPIC_POSE={{ camera }}-pose-data
-  #     - OUT_TOPIC_GESTURE={{ camera }}-gesture-stream
-  #     - DATA_TOPIC_GESTURE={{ camera }}-gesture-data
-  #   restart: no
-  ai-process-{{ camera  }}:
+  ai-process-kafka-{{ camera }}:
+    build:
+      context: ./AIProcess-Kafka
+      dockerfile: ../dockerfiles/AIProcess.Dockerfile
+    networks:
+      - kafka-net
+    depends_on:
+      - kafka
+      - mjpegstreamer
+    environment:
+      - KAFKA_SERVERS=kafka:9092
+      - MJPEG_SERVER=mjpegstreamer:8095
+      - IN_TOPIC={{ camera }}-stream
+      - OUT_TOPIC_FACE={{ camera }}-faces-stream
+      - DATA_TOPIC_FACE={{ camera }}-faces-data
+      - OUT_TOPIC_POSE={{ camera }}-pose-stream
+      - DATA_TOPIC_POSE={{ camera }}-pose-data
+      - OUT_TOPIC_GESTURE={{ camera }}-gesture-stream
+      - DATA_TOPIC_GESTURE={{ camera }}-gesture-data
+    restart: no
+  {# ai-process-{{ camera  }}:
     build:
       context: ./Video_Detection_Part
       dockerfile: ../dockerfiles/AIProcess.Dockerfile
@@ -197,7 +195,7 @@ services:
       - PORT=8096
     ports:
       - 8096:8096
-    restart: no
+    restart: no #}
   {%- endfor %}
 
   {# TODO: API Server #}
