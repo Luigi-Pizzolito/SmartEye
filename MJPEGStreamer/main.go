@@ -72,6 +72,7 @@ func main() {
 	kafkaCon := NewKafkaMultiStreamReader(kafkaBrokers, frameStreams)
 
 	// get channels from Kafka
+	// TODO: get new frame topics and update when the ai starts
 	streamChannels = kafkaCon.getFrameTopicsList()
 	fmt.Println("Found frame topics: ", streamChannels)
 
