@@ -87,7 +87,7 @@ class FaceRegister:
                 self.existing_faces_cnt += 1
                 current_face_dir = self.path_photos_from_camera + "person_" + str(self.existing_faces_cnt)
                 os.mkdir(current_face_dir)
-                logging.info("\n%-40s %s", "Create folders:", current_face_dir)
+                # logging.info("\n%-40s %s", "Create folders:", current_face_dir)
 
                 self.ss_cnt = 0
                 self.press_n_flag = 1
@@ -103,7 +103,8 @@ class FaceRegister:
                         color = (0, 0, 255)
                         save_flag = 0
                         if k == ord('s'):
-                            logging.warning("please keep far from your present position")
+                            pass
+                            # logging.warning("please keep far from your present position")
 
                     else:
                         color = (255, 255, 255)
@@ -124,10 +125,11 @@ class FaceRegister:
                                     for jj in range(width*2):
                                         img_blank[ii][jj] = frame[d.top() - hh + ii][d.left() - ww + jj]
                                 cv.imwrite(current_face_dir + "/img_face_" + str(self.ss_cnt) + ".jpg", img_blank)
-                                logging.info("%-40s %s/img_face_%s.jpg", "Save into：",
-                                             str(current_face_dir), str(self.ss_cnt))
+                                # logging.info("%-40s %s/img_face_%s.jpg", "Save into：",
+                                #              str(current_face_dir), str(self.ss_cnt))
                             else:
-                                logging.warning("Please press 'N' and then press 'S'")
+                                pass
+                                # logging.warning("Please press 'N' and then press 'S'")
 
             self.current_frame_faces_cnt = len(faces)
 
@@ -146,11 +148,11 @@ class FaceRegister:
         cv.destroyAllWindows()
 
 
-def main():
-    logging.basicConfig(level=logging.INFO)
-    face_recog = FaceRegister()
-    face_recog.run()
-
-
-if __name__ == '__main__':
-    main()
+# def main():
+#     logging.basicConfig(level=logging.INFO)
+#     face_recog = FaceRegister()
+#     face_recog.run()
+#
+#
+# if __name__ == '__main__':
+#     main()

@@ -76,5 +76,5 @@ def main():
         logging.info("所有录入人脸数据存入 / Save all the features of faces registered into: data/features_all.csv")
 
 
-if __name__ == '__main__':
-    main()
+# if __name__ == '__main__':
+#     main()
