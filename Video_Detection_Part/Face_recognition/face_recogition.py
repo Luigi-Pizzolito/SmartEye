@@ -148,10 +148,6 @@ class FaceRecognizer:
     #     cap.release()
     #     cv.destroyAllWindows()
 
-
-
-
-
 def process_face(stream):
     Face_Recognizer = FaceRecognizer()
     cap=cv.VideoCapture(0)
