@@ -1,0 +1,10 @@
+cramjam==2.8.2
+kafka-python==2.0.2
+numpy==1.26.4
+pandas==2.2.1
+opencv-python-headless==4.9.0.80
+mediapipe==0.10.11
+dlib==19.24.2
+pillow==10.2.0
+python-snappy==0.7.1
+requests==2.31.0

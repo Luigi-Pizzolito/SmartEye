@@ -64,6 +64,7 @@ func ServeMJPEG(w http.ResponseWriter, r *http.Request) {
 		case <-closeNotifier:
 			// Client disconnected
 			fmt.Printf("Client %s disconnected to %s\n", r.RemoteAddr, r.URL.String())
+			bcastMap[r.URL.Path].LeaveGroup(instanceID)
 			return
 		default:
 			// If no frames were recieved, wait a little

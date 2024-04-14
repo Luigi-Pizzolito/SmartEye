@@ -56,7 +56,7 @@ func main() {
 	addr := ":8095"
 	kafkaBrokers := []string{"kafka:9092"}
 	//? any kafka topic containing these substrings is processed as a JPEG stream
-	frameStreams := []string{"camera"}
+	frameStreams := []string{"stream"}
 
 	// connect to Kafka brokers
 	kafkaCon := NewKafkaMultiStreamReader(kafkaBrokers, frameStreams)

@@ -28,7 +28,7 @@ NAVBAR
 	<button class="navbar-toggler collapsed" type="button" data-toggle="collapse" data-target="#navbarColor02" aria-controls="navbarColor02" aria-expanded="false" aria-label="Toggle navigation">
 	<span class="navbar-toggler-icon"></span>
 	</button>
-	<div class="navbar-collapse collapse" id="navbarColor02" style="">
+	<div class="navbar-collapse collapse" id="navbarColor02">
 		<ul class="navbar-nav mr-auto d-flex align-items-center">
 			<li class="nav-item">
 			<a class="nav-link" href="./index.html">Home<span class="sr-only">(current)</span></a>
@@ -42,9 +42,6 @@ NAVBAR
 			<li class="nav-item">
 			<a class="nav-link" href="./about.html">About Us</a>
 			</li>
-			<!-- <li class="nav-item">
-			<a class="nav-link" href="./docs.html">Template <span class="badge badge-secondary">docs</span></a>
-			</li> -->
 		</ul>
 		<ul class="navbar-nav ml-auto d-flex align-items-center">
 			<li class="nav-item highlight">
@@ -88,59 +85,26 @@ MAIN
 <div class="container">
 	<div class="row justify-content-between">
 		<div class="col-md-6 pt-4">
-			<h5 class="font-weight-bold spanborder"><span>Camera 0</span></h5>
+			<h4 class="font-weight-bold spanborder"><span>Camera 0</span></h4>
 			<div class="mb-3 d-flex justify-content-between">
 				<div class="pr-3">
-					<canvas id='test_canvas' width='544px' height='408px' style='border:1px solid #d3d3d3'>
-					</canvas>					
-					<script language="JavaScript">
-					  var ctx = document.getElementById('test_canvas').getContext('2d');
-					  var img = new Image();
-					  img.onload = function() {
-						ctx.drawImage(img, 0, 0);
-					  };
-					  	var theDate = new Date();
-					  	img.src = "http://172.20.10.3:81";
-					 	window.setInterval("refreshCanvas()", 10);
-						function refreshCanvas(){
-						ctx.drawImage(img, 0, 0);
-					};
-					</script>
-					<div class="card-text text-muted small">
-						 &middot; frame rate : 100fps
+					<img src="http://localhost:8095/camera0-stream.mjpeg">
+					<div class="pt-1 card-text text-muted small">
+						 &middot; frame rate : 10fps
 					</div>
 				</div>
 			</div>
-<!-- 			<div class="mb-3 d-flex justify-content-between">
-				<div class="pr-3">
-					<h2 class="mb-1 h4 font-weight-bold">
-					<a class="text-dark" href="./article.html">East Antarctica's glaciers are stirring</a>
-					</h2>
-					<p>
-						Nasa says it has detected the first signs of significant melting in a swathe of glaciers in East Antarctica.
-					</p>
-					<div class="card-text text-muted small">
-						 Jake Bittle in SCIENCE
-					</div>
-					<small class="text-muted">Dec 12 &middot; 5 min read</small>
-				</div>
-				<img height="120" src="./assets/img/demo/1.jpg">
-			</div> -->
 		</div>
-		<div class="col-md-6 pl-4 pt-4">
-            <h5 class="font-weight-bold spanborder"><span>Camera 1</span></h5>
-			<ol class="list-featured">
-				<!-- <li>
-				<span>
-				<h6 class="font-weight-bold">
-				<a href="./article.html" class="text-dark">Unprecedented Views of the Birth of Planets</a>
-				</h6>
-				<p class="text-muted">
-					Jake Bittle in SCIENCE
-				</p>
-				</span>
-				</li> -->
-			</ol>
+		<div class="col-md-6 pt-4">
+            <h4 class="font-weight-bold spanborder"><span>Camera 0 - Gesture Recognition</span></h4>
+			<div class="mb-3 d-flex justify-content-between">
+				<div class="pr-3">
+					<img src="http://localhost:8095/camera0-gesture-stream.mjpeg">
+					<div class="pt-1 card-text text-muted small">
+						 &middot; frame rate : 10fps
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
@@ -149,34 +113,78 @@ MAIN
 <div class="container">
 	<div class="row justify-content-between">
 		<div class="col-md-6 pt-4">
-			<h5 class="font-weight-bold spanborder"><span>Camera 2</span></h5>
-
+			<h4 class="font-weight-bold spanborder"><span>Camera 0 - Face Recognition</span></h4>
+			<div class="mb-3 d-flex justify-content-between">
+				<div class="pr-3">
+					<img src="http://localhost:8095/camera0-faces-stream.mjpeg">
+					<div class="pt-1 card-text text-muted small">
+						 &middot; frame rate : 10fps
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="col-md-6 pl-4 pt-4">
-            <h5 class="font-weight-bold spanborder"><span>Camera 3</span></h5>
-			<ol class="list-featured">
-
-			</ol>
+		<div class="col-md-6 pt-4">
+            <h4 class="font-weight-bold spanborder"><span>Camera 0 - Pose Recognition</span></h4>
+			<div class="mb-3 d-flex justify-content-between">
+				<div class="pr-3">
+					<img src="http://localhost:8095/camera0-pose-stream.mjpeg">
+					<div class="pt-1 card-text text-muted small">
+						 &middot; frame rate : 10fps
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
     
 
-<!-- detection -->
+<!-- detection
 <div class="container">
 	<div class="row justify-content-between">
 		<div class="col-md-6 pt-4">
-			<h5 class="font-weight-bold spanborder"><span>Face Detection</span></h5>
-
+			<h4 class="font-weight-bold spanborder"><span>Fall Detection</span></h4>
+			<div class="mb-3 d-flex justify-content-between">
+				<div class="pr-3">
+					<img src="http://localhost:8095/Fall Detection.mjpeg">
+					<div class="pt-1 card-text text-muted small">
+						 &middot; frame rate : 10fps
+					</div>
+				</div>
+			</div>
 		</div>
-		<div class="col-md-6 pl-4 pt-4">
-            <h5 class="font-weight-bold spanborder"><span>Pose Detection</span></h5>
-			<ol class="list-featured">
-
-			</ol>
+		<div class="col-md-6 pt-4">
+            <h4 class="font-weight-bold spanborder"><span>Pose Detection</span></h4>
+			<div class="mb-3 d-flex justify-content-between">
+				<div class="pr-3">
+					<img src="http://localhost:8095/Pose Detection.mjpeg">
+					<div class="pt-1 card-text text-muted small">
+						 &middot; frame rate : 10fps
+					</div>
+				</div>
+			</div>
 		</div>
 	</div>
 </div>
+
+<div class="container">
+	<h4 class="font-weight-bold spanborder pt-4"><span>Face Detection</span></h4>
+	<div class="row justify-content-between">
+		<div class="col-md-6">
+			<div class="mb-3 d-flex justify-content-between ">
+				<div class="pr-3">
+					<img src="http://localhost:8095/Face Detection.mjpeg">
+					<div class="pt-1 card-text text-muted small">
+						 &middot; frame rate : 10fps
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-6 align-items-start">
+			<a href="./docs.html" class="btn btn-orange d-block mb-4 " style="width:160px">Face Read</a>
+			<a href="./docs.html" class="btn btn-orange d-block " style="width:160px;">Face Recognition</a>
+		</div>
+	</div>
+</div> -->
 
 
 <!--------------------------------------
