@@ -87,11 +87,8 @@ MAIN
 		<div class="col-md-6 pt-4">
 			<h4 class="font-weight-bold spanborder"><span>Camera 0</span></h4>
 			<div class="mb-3 d-flex justify-content-between">
-				<div class="pr-3">
+				<div class="pr-3" id="getImg">
 					<img src="http://localhost:8095/camera0-stream.mjpeg">
-					<div class="pt-1 card-text text-muted small">
-						 &middot; frame rate : 10fps
-					</div>
 				</div>
 			</div>
 		</div>
@@ -136,7 +133,30 @@ MAIN
 		</div>
 	</div>
 </div>
-    
+
+
+<script>
+    fetch('http://localhost:8095/list')
+        .then(response => response.json())
+        .then(data => {
+            const getData = document.getElementById('getImg');
+            data.Streams.forEach(stream => {
+                const img = document.createElement('img');
+                img.src = 'http://localhost:8095/${stream}';
+                getData.appendChild(img);
+
+                const fps = data.FPS[stream];
+			    if (fps !== undefined) {
+			      const fpsParagraph = document.createElement('p');
+			      fpsParagraph.textContent = 'FPS for ${stream}: ${fps}';
+			      getData.appendChild(fpsParagraph);
+			    }
+            });
+        })
+        .catch(error => console.error('Error fetching stream list:', error));
+</script>
+
+
 
 <!-- detection
 <div class="container">
