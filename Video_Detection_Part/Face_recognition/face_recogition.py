@@ -276,7 +276,7 @@ def process_face(stream):
                    b'Content-Type: image/jpeg\r\n\r\n' + img + b'\r\n')
             # logging.debug("Frame ends\n\n")
         stream.release()
-        # cv.destroyAllWindows()
+        cv.destroyAllWindows()
 
 # @app.route('/video_feed1')
 # def video_feed1():
