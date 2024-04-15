@@ -119,8 +119,6 @@ services:
       - kafka-net
     depends_on:
       - kafka
-    ports: 
-      - 6060:6060
     restart: unless-stopped
   {%- endfor %}
     # deploy:
@@ -144,6 +142,7 @@ services:
       - kafka-net
     ports:
       - 8095:8095
+      - 6060:6060
     depends_on:
       - kafka
     restart: unless-stopped
@@ -162,17 +161,15 @@ services:
   # Python AI Video Processing
   # Kafka Camera Streams -> Python AI -> Kafka AI Streams + Data
   # for face, pose and gesture recognition
-  ai-process-{{ camera }}:
+  ai-process-kafka-{{ camera }}:
     build:
-      context: ./AIProcess
+      context: ./AIProcess-Kafka
       dockerfile: ../dockerfiles/AIProcess.Dockerfile
     networks:
       - kafka-net
     depends_on:
       - kafka
       - mjpegstreamer
-    volumes:
-      - ./img:/app/img
     environment:
       - KAFKA_SERVERS=kafka:9092
       - MJPEG_SERVER=mjpegstreamer:8095
@@ -184,6 +181,21 @@ services:
       - OUT_TOPIC_GESTURE={{ camera }}-gesture-stream
       - DATA_TOPIC_GESTURE={{ camera }}-gesture-data
     restart: no
+  {# ai-process-{{ camera  }}:
+    build:
+      context: ./Video_Detection_Part
+      dockerfile: ../dockerfiles/AIProcess.Dockerfile
+    depends_on:
+      - mjpegstreamer
+    networks:
+      - kafka-net
+    environment:
+      - CAMERA={{ camera }}
+      - MJPEG_SERVER=mjpegstreamer:8095
+      - PORT=8096
+    ports:
+      - 8096:8096
+    restart: no #}
   {%- endfor %}
 
   {# TODO: API Server #}

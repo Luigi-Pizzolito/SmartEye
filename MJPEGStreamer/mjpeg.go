@@ -18,7 +18,6 @@ import (
 	"net/http"
 	"net/textproto"
 	"strconv"
-	"time"
 )
 
 // ServerHTTP will use the camera in Mjpeg server it over the response.
@@ -68,7 +67,6 @@ func ServeMJPEG(w http.ResponseWriter, r *http.Request) {
 			return
 		default:
 			// If no frames were recieved, wait a little
-			time.Sleep(50 * time.Millisecond)
 		}
 
 	}

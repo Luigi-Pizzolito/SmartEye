@@ -37,11 +37,6 @@ import (
 
 	"mime/multipart"
 	"net/http"
-
-	//! profiler deps
-	_ "net/http/pprof"
-
-	"github.com/felixge/fgprof"
 )
 
 var (
@@ -57,12 +52,6 @@ var (
 )
 
 func main() {
-	//! profiler insert
-	http.DefaultServeMux.Handle("/debug/fgprof", fgprof.Handler())
-	go func() {
-		log.Println(http.ListenAndServe(":6060", nil))
-	}()
-
 	// Configuration from ENV variables
 	//TODO: accept usbcam
 	// -- Kafka brokers

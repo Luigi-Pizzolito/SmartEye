@@ -32,3 +32,4 @@ COPY . /app
 
 # Run app.py when the container launches
 CMD ["wait-for-it", "-s", "kafka:9092", "--", "python", "main.py"]
+# CMD ["python", "main.py"]
