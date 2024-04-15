@@ -16,7 +16,7 @@ detector = dlib.get_frontal_face_detector()
 
 class FaceRegister:
     def __init__(self):
-        self.path_photos_from_camera = "Face_recognition/Data/data_faces/"
+        self.path_photos_from_camera = "Data/data_faces/"
         self.font = cv.FONT_ITALIC
         self.existing_faces_cnt = 0
         self.ss_cnt = 0
@@ -73,79 +73,93 @@ class FaceRegister:
         cv.putText(img_rd, "S: Save current face", (20, 400), self.font, 0.8, (255, 255, 255), 1, cv.LINE_AA)
         cv.putText(img_rd, "Q: Quit", (20, 450), self.font, 0.8, (255, 255, 255), 1, cv.LINE_AA)
 
-    def process(self, stream):
-        self.mkdir_store()
+def process_faceRead(stream):
+    face_recog = FaceRegister()
 
-        self.check_existing_faces_cnt()
 
-        while stream.isOpened():
-            flag, frame = stream.read()
-            k = cv.waitKey(1)
-            faces = detector(frame)
 
-            if k == ord('n'):
-                self.existing_faces_cnt += 1
-                current_face_dir = self.path_photos_from_camera + "person_" + str(self.existing_faces_cnt)
-                os.mkdir(current_face_dir)
-                # logging.info("\n%-40s %s", "Create folders:", current_face_dir)
+    face_recog.mkdir_store()
 
-                self.ss_cnt = 0
-                self.press_n_flag = 1
+    face_recog.check_existing_faces_cnt()
 
-            if len(faces) != 0:
-                for i, d in enumerate(faces):
-                    height = (d.bottom() - d.top())
-                    width = (d.right() - d.left())
-                    hh = int(height / 2)
-                    ww = int(width / 2)
+    while stream.isOpened():
+        flag, frame = stream.read()
+        k = cv.waitKey(1)
+        faces = detector(frame)
 
-                    if (d.right() + ww) > 1400 or (d.bottom() + hh > 1100) or (d.left() - ww < 0) or (d.top() - hh < 0):
-                        color = (0, 0, 255)
-                        save_flag = 0
-                        if k == ord('s'):
+        if k == ord('n'):
+            face_recog.existing_faces_cnt += 1
+            current_face_dir = face_recog.path_photos_from_camera + "person_" + str(face_recog.existing_faces_cnt)
+            os.mkdir(current_face_dir)
+            # logging.info("\n%-40s %s", "Create folders:", current_face_dir)
+
+            face_recog.ss_cnt = 0
+            face_recog.press_n_flag = 1
+
+        if len(faces) != 0:
+            for i, d in enumerate(faces):
+                height = (d.bottom() - d.top())
+                width = (d.right() - d.left())
+                hh = int(height / 2)
+                ww = int(width / 2)
+
+                if (d.right() + ww) > 1400 or (d.bottom() + hh > 1100) or (d.left() - ww < 0) or (d.top() - hh < 0):
+                    color = (0, 0, 255)
+                    save_flag = 0
+                    if k == ord('s'):
+                        pass
+                        # logging.warning("please keep far from your present position")
+
+                else:
+                    color = (255, 255, 255)
+                    save_flag = 1
+
+                cv.rectangle(frame, tuple([d.left() - ww, d.top() - hh]),
+                             tuple([d.right() + ww, d.bottom() + hh]),
+                             color, thickness=2)
+                img_blank = np.zeros((int(height*2), width*2, 3), np.uint8)
+
+                if save_flag:
+
+                    if k == ord('s'):
+
+                        if face_recog.press_n_flag:
+                            face_recog.ss_cnt += 1
+                            for ii in range(height*2):
+                                for jj in range(width*2):
+                                    img_blank[ii][jj] = frame[d.top() - hh + ii][d.left() - ww + jj]
+                            cv.imwrite(current_face_dir + "/img_face_" + str(face_recog.ss_cnt) + ".jpg", img_blank)
+                            # logging.info("%-40s %s/img_face_%s.jpg", "Save into：",
+                                          # str(current_face_dir), str(face_recog.ss_cnt))
+                        else:
                             pass
-                            # logging.warning("please keep far from your present position")
+                            # logging.warning("Please press 'N' and then press 'S'")
 
-                    else:
-                        color = (255, 255, 255)
-                        save_flag = 1
+        face_recog.current_frame_faces_cnt = len(faces)
 
-                    cv.rectangle(frame, tuple([d.left() - ww, d.top() - hh]),
-                                 tuple([d.right() + ww, d.bottom() + hh]),
-                                 color, thickness=2)
-                    img_blank = np.zeros((int(height*2), width*2, 3), np.uint8)
+        face_recog.draw_note(frame)
 
-                    if save_flag:
+        if k == ord('q'):
+            break
 
-                        if k == ord('s'):
+        face_recog.update_fps()
+        """#############################################看这里############################################"""
+        # cv.imshow("camera", frame)
 
-                            if self.press_n_flag:
-                                self.ss_cnt += 1
-                                for ii in range(height*2):
-                                    for jj in range(width*2):
-                                        img_blank[ii][jj] = frame[d.top() - hh + ii][d.left() - ww + jj]
-                                cv.imwrite(current_face_dir + "/img_face_" + str(self.ss_cnt) + ".jpg", img_blank)
-                                # logging.info("%-40s %s/img_face_%s.jpg", "Save into：",
-                                #              str(current_face_dir), str(self.ss_cnt))
-                            else:
-                                pass
-                                # logging.warning("Please press 'N' and then press 'S'")
+        ret, buffer = cv.imencode('.jpg', frame)
+        img = buffer.tobytes()
+        yield (b'--frame\r\n'
+               b'Content-Type: image/jpeg\r\n\r\n' + img + b'\r\n')
+            # logging.debug("Frame ends\n\n")
+    stream.release()
+    cv.destroyAllWindows()
+    """#############################################看这里############################################"""
 
-            self.current_frame_faces_cnt = len(faces)
-
-            self.draw_note(frame)
-
-            if k == ord('q'):
-                break
-
-            self.update_fps()
-            # cv.imshow("camera", frame)
-
-    def run(self):
-        cap = cv.VideoCapture(0)
-        self.process(cap)
-        cap.release()
-        cv.destroyAllWindows()
+    # def run(self):
+    #     cap = cv.VideoCapture(0)
+    #     self.process(cap)
+    #     cap.release()
+    #     cv.destroyAllWindows()
 
 
 # def main():

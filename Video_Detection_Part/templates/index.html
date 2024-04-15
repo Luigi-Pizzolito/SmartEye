@@ -71,7 +71,7 @@ HEADER
 					</p>
 					<a href="/docs" class="btn btn-dark">More details from docs</a>
 				</div>
-<!--				<div class="col-md-3 d-none d-md-block pr-0" style="background-size:cover;background-image:url({{ url_for('static', filename='img/web.png') }});">	</div>-->
+				<div class="col-md-3 d-none d-md-block pr-0" style="background-size:cover;background-image:url({{ url_for('static', filename='img/web.png') }});">	</div>
 			</div>
 		</div>
 	</div>
@@ -86,7 +86,7 @@ MAIN
 <div class="container">
 	<div class="row justify-content-between">
 		<div class="col-md-6 pt-4">
-			<h4 class="font-weight-bold spanborder"><span>Camera 0</span></h4>
+			<h4 class="font-weight-bold spanborder"><span>Gesture Recognition</span></h4>
 			<div class="mb-3 d-flex justify-content-between">
 				<div class="pr-3">
 					<img src="{{ url_for('video_feed1') }}" alt="Video Feed 1">
@@ -98,67 +98,10 @@ MAIN
 			</div>
 		</div>
 		<div class="col-md-6 pt-4">
-            <h4 class="font-weight-bold spanborder"><span>Camera 1</span></h4>
+            <h4 class="font-weight-bold spanborder"><span>Pose Recognition</span></h4>
 			<div class="mb-3 d-flex justify-content-between">
 				<div class="pr-3">
-					<img src="{{ url_for('video_feed2')}}" alt="Video Feed 2">
-					<div class="pt-1 card-text text-muted small">
-						 &middot; frame rate : 10fps
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-
-<!-- camera 2 and 3 -->
-<div class="container">
-	<div class="row justify-content-between">
-		<div class="col-md-6 pt-4">
-			<h4 class="font-weight-bold spanborder"><span>Camera 2</span></h4>
-			<div class="mb-3 d-flex justify-content-between">
-				<div class="pr-3">
-					<img src="{{ url_for('video_feed3')}}" alt="Video Feed 3">
-					<div class="pt-1 card-text text-muted small">
-						 &middot; frame rate : 10fps
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-6 pt-4">
-            <h4 class="font-weight-bold spanborder"><span>Camera 3</span></h4>
-			<div class="mb-3 d-flex justify-content-between">
-				<div class="pr-3">
-					<img src="http://localhost:8095/camera3.mjpeg">
-					<div class="pt-1 card-text text-muted small">
-						 &middot; frame rate : 10fps
-					</div>
-				</div>
-			</div>
-		</div>
-	</div>
-</div>
-    
-
-<!-- detection -->
-<div class="container">
-	<div class="row justify-content-between">
-		<div class="col-md-6 pt-4">
-			<h4 class="font-weight-bold spanborder"><span>Fall Detection</span></h4>
-			<div class="mb-3 d-flex justify-content-between">
-				<div class="pr-3">
-					<img src="http://localhost:8095/Fall Detection.mjpeg">
-					<div class="pt-1 card-text text-muted small">
-						 &middot; frame rate : 10fps
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="col-md-6 pt-4">
-            <h4 class="font-weight-bold spanborder"><span>Pose Detection</span></h4>
-			<div class="mb-3 d-flex justify-content-between">
-				<div class="pr-3">
-					<img src="http://localhost:8095/Pose Detection.mjpeg">
+					
 					<div class="pt-1 card-text text-muted small">
 						 &middot; frame rate : 10fps
 					</div>
@@ -174,7 +117,7 @@ MAIN
 		<div class="col-md-6">
 			<div class="mb-3 d-flex justify-content-between ">
 				<div class="pr-3">
-					<img src="http://localhost:8095/Face Detection.mjpeg">
+					
 					<div class="pt-1 card-text text-muted small">
 						 &middot; frame rate : 10fps
 					</div>
@@ -182,11 +125,31 @@ MAIN
 			</div>
 		</div>
 		<div class="col-md-6 align-items-start">
-			<a href="docs.html" class="btn btn-orange d-block mb-4 " style="width:160px">Face Read</a>
-			<a href="docs.html" class="btn btn-orange d-block " style="width:160px;">Face Recognition</a>
+			<a href="docs.html" class="btn btn-orange d-block mb-4 " style="width:180px">Create new face(N)</a>
+			<button id="myButton">Press Me</button>
+			<script>
+	        document.getElementById("myButton").addEventListener("click", function() {
+	            // 发送 HTTP 请求到 Python 后端
+	            var xhr = new XMLHttpRequest();
+	            xhr.open("GET", "/trigger_event", true);
+	            xhr.send();
+	        });
+   			 </script>
+
+			<a href="docs.html" class="btn btn-orange d-block mb-4 " style="width:180px;">Store new face(S)</a>
+			<a href="docs.html" class="btn btn-orange d-block " style="width:180px;">Show Result(Q)</a>
 		</div>
 	</div>
 </div>
+
+<!-- <img src="{{ url_for('video_feed1')}}" alt="Video Feed 4"> -->
+
+<form action="/process" method="POST">
+  <label for="name">姓名:</label>
+  <input type="text" id="name" name="name" placeholder="输入您的姓名">
+  <input type="submit" value="提交">
+</form>
+
 
 <!--------------------------------------
 FOOTER
