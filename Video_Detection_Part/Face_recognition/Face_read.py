@@ -73,7 +73,7 @@ class FaceRegister:
         cv.putText(img_rd, "S: Save current face", (20, 400), self.font, 0.8, (255, 255, 255), 1, cv.LINE_AA)
         cv.putText(img_rd, "Q: Quit", (20, 450), self.font, 0.8, (255, 255, 255), 1, cv.LINE_AA)
 
-def process(stream):
+def process_faceRead(stream):
     face_recog = FaceRegister()
 
 
