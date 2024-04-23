@@ -1,4 +1,5 @@
 import os
+import sys
 import cv2
 import numpy as np
 import multiprocessing
@@ -6,6 +7,9 @@ import multiprocessing
 # *******************************************************************
 # * Author: 2024 Kael (956136864@qq.com)
 # *         2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
+#
+# * LastEdit: 2024/04/23 Kael (956136864@qq.com)
+# * Commit: error respond and report
 # *******************************************************************
 import time
 import requests
@@ -18,9 +22,8 @@ from kafkacon import KafkaCon
 from VideoProcess.KafkaFace import FaceRecognizer, KafkaFace
 from VideoProcess.KafkaHand import GestureDetection, KafkaHand
 from VideoProcess.KafkaPose import FallDetection, KafkaPose
-
-
-def FaceProcess():
+    
+def DetectionProcess(process, handle):
     print("Starting face recognition for", os.environ["IN_TOPIC"])
     # start Kafka client
     kafka_con = KafkaCon(
@@ -31,62 +34,20 @@ def FaceProcess():
 
     # define topics
     in_topic = os.environ["IN_TOPIC"]
-    out_topic = os.environ["OUT_TOPIC_FACE"]
-    data_topic = os.environ["DATA_TOPIC_FACE"]
-
+    out_topic = os.environ["OUT_TOPIC_" + handle ]
+    data_topic = os.environ["DATA_TOPIC_" + handle ]
+    
+    try:
     # read frames with CV
-    esp_cam = cv2.VideoCapture(kafka_con.get_stream(in_topic))
-
-    KafkaFace(esp_cam, kafka_con, out_topic, data_topic)
-
+        esp_cam = cv2.VideoCapture(kafka_con.get_stream(in_topic))       
+        process(esp_cam, kafka_con, out_topic, data_topic )
+    except Exception as e:
+        kafka_con.send_data(data_topic, [f"Error(s) raised in {handle } Process with exception {e }." ] )
+        raise Exception(f"Error(s) raised in {handle } Process with exception {e }." )
+    
     # close Kafka connection when program exits
     kafka_con.close()
-
-
-def PoseProcess():
-    print("Starting pose recognition for", os.environ["IN_TOPIC"])
-    # start Kafka client
-    kafka_con = KafkaCon(
-        bootstrap_servers=os.environ["KAFKA_SERVERS"],
-        mjpeg_host=os.environ["MJPEG_SERVER"]
-    )
-    kafka_con.connect()
-
-    # define topics
-    in_topic = os.environ["IN_TOPIC"]
-    out_topic = os.environ["OUT_TOPIC_POSE"]
-    data_topic = os.environ["DATA_TOPIC_POSE"]
-
-    # read frames with CV
-    esp_cam = cv2.VideoCapture(kafka_con.get_stream(in_topic))
-
-    KafkaPose(esp_cam, kafka_con, out_topic, data_topic)
-
-    # close Kafka connection when program exits
-    kafka_con.close()
-
-
-def HandProcess():
-    print("Starting gesture recognition for", os.environ["IN_TOPIC"])
-    # start Kafka client
-    kafka_con = KafkaCon(
-        bootstrap_servers=os.environ["KAFKA_SERVERS"],
-        mjpeg_host=os.environ["MJPEG_SERVER"]
-    )
-    kafka_con.connect()
-
-    # define topics
-    in_topic = os.environ["IN_TOPIC"]
-    out_topic = os.environ["OUT_TOPIC_GESTURE"]
-    data_topic = os.environ["DATA_TOPIC_GESTURE"]
-
-    # read frames with CV
-    esp_cam = cv2.VideoCapture(kafka_con.get_stream(in_topic))
-
-    KafkaHand(esp_cam, kafka_con, out_topic, data_topic)
-
-    # close Kafka connection when program exits
-    kafka_con.close()
+    
 
 
 def CameraStreamReady():
@@ -104,16 +65,41 @@ def CameraStreamReady():
     return False
 
 
+
 def main():
-    print("started main")
-    # --
-    face_process = multiprocessing.Process(target=FaceProcess, args=())
-    face_process.start()
-    pose_process = multiprocessing.Process(target=PoseProcess, args=())
-    pose_process.start()
-    hand_process = multiprocessing.Process(target=HandProcess, args=())
-    hand_process.start()
+    # -- multiple process
+    processes = []
+    process = multiprocessing.Process(target=DetectionProcess, \
+        name="face_process", args=(KafkaFace, "FACE") )
+    process.start()
+    processes.append(process )
+    process = multiprocessing.Process(target=DetectionProcess, \
+        name="pose_process", args=(KafkaPose, "POSE") )
+    process.start()
+    processes.append(process )
+    process = multiprocessing.Process(target=DetectionProcess, \
+        name="hand_process", args=(KafkaHand, "GESTURE") )
+    process.start()
+    processes.append(process )
     #  multiple process --
+    
+    # -- error respond and report
+    are_u_alive =  lambda x: x.is_alive()
+    while True:
+        if all(list(map(are_u_alive, processes ) ) ):
+            time.sleep(1)
+            
+            
+        else:
+            for process in processes:
+                process.terminate()
+                
+            for process in processes:
+                process.join()   
+                
+            sys.exit() 
+    # error respond and report --
+    
 
 
 if __name__ == "__main__":
