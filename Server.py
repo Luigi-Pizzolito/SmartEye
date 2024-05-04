@@ -4,12 +4,10 @@ import json
 
 async def handle_message(websocket):
     async for message in websocket:
-        try:
-            data=json.loads(message)
-            action=data.get('action')
-            print(action)
-        except Exception as e:
-            print("get_error")
+        data=json.loads(message)
+        action=data.get('action')
+        print(action)
+
 
 
 if __name__=="__main__":

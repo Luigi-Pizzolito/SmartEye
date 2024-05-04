@@ -1,4 +1,4 @@
-const socket=new WebSocket("https://localhost:8094")
+const socket=new WebSocket("ws://localhost:8094")
 
 const faceReg=document.getElementById('faceReg')
 const faceSave=document.getElementById('faceSaved')
