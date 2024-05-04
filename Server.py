@@ -1,17 +1,19 @@
-from flask import Flask,request
-from
+import asyncio
+import websockets
+import json
 
-app=Flask(__name__)
-
-@app.route('/receive',method=['POST'])
-def receive():
-    data=request.json
-    if data=='r':
-
-    elif data=='s':
-
-    else:
-        pass
+async def handle_message(websocket):
+    async for message in websocket:
+        try:
+            data=json.loads(message)
+            action=data.get('action')
+            print(action)
+        except Exception as e:
+            print("get_error")
 
 
-def deal():
+if __name__=="__main__":
+    server=websockets.serve(handle_message, "localhost", 8094)
+    asyncio.get_event_loop().run_until_complete(server)
+    asyncio.get_event_loop().run_forever()
+
