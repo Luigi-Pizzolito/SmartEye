@@ -54,7 +54,7 @@ def features_mean_PersonX(path_face):
     return features_mean_personX
 
 
-def main():
+def face_store(path ):
     logging.basicConfig(level=logging.INFO)
     person_list = os.listdir("Data/data_faces")
     person_list.sort()
@@ -62,8 +62,8 @@ def main():
     with open("VideoProcess/Data/features.csv","w",newline="") as f:
         writer=csv.writer(f)
         for person in person_list:
-            logging.info("%sperson_%s", path_images_from_camera, person)
-            features_mean = features_mean_PersonX(path_images_from_camera + person)
+            logging.info("%sperson_%s", path, person)
+            features_mean = features_mean_PersonX(path + person)
 
             if len(person.split('_', 2)) == 2:
                 # "person_x"
@@ -79,4 +79,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    face_store(path = path_images_from_camera )
