@@ -1,0 +1,62 @@
+<!--
+# ********************************************************************
+#   * Author: 2024 Jingdi Lei (@https://github.com/kyrieLei)
+# ********************************************************************
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Login to SmartEye</title>
+        <style type="text/css">
+            body{
+                text-align: center;
+            }
+        </style>
+    </head>
+    <body>
+		<font size="6">Login</font>
+		<br />
+		User name：
+		<input type="text" name="user_name" id="user_name" placeholder="user name" />
+		<br />
+		Password：
+		<input type="password" name="user_password" id="user_password" value="" placeholder="password" />
+		<br>
+		<button type="button" id="login">login</button>
+		<button type="button" id="register">register</button>
+		<br />
+		<p id="login_sucss"></p>
+	</body>
+    <script type="text/javascript">
+        var login_btn=document.getElementById("login");
+        var register_btn=document.getElementById("register");
+
+        login_btn.addEventListener("click",function(){
+            var user_name=document.getElementById("user_name").value;
+            var user_password=document.getElementById("user_password").value;
+            var user_nameArr=new Array(localStorage.length);
+
+            for(i=0;i<localStorage.length;i++){
+                user_nameArr[i]=localStorage.key(i);
+            }
+            if(user_nameArr.includes(user_name)){
+                var store_password=localStorage.getItem(user_name)
+                if(user_password==store_password){
+                    confirm("Login success, Enter");
+                    window.location.href="index.html"
+                }
+                else{
+                    document.getElementById("login_sucss").innerHTML = "Wrong password！";
+                }
+            }
+            else{
+                document.getElementById("login_sucss").innerHTML = "User name doesn't exist!";
+            }
+        })
+        register_btn.addEventListener("click",function(){
+            window.location.href="Register.html";
+        })
+
+    </script>
+</html>

@@ -142,32 +142,25 @@ def process_faceRead(stream):
             break
 
         face_recog.update_fps()
+    # stream.release()
+    # cv.destroyAllWindows()
+
+        cv.imshow("camera", frame)
+
+        # ret, buffer = cv.imencode('.jpg', frame)
+        # frame = buffer.tobytes()
+        # yield (b'--frame\r\n'
+        #        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+        #     # logging.debug("Frame ends\n\n")
     stream.release()
     cv.destroyAllWindows()
     """#############################################看这里############################################"""
-        # cv.imshow("camera", frame)
-
-    #     ret, buffer = cv.imencode('.jpg', frame)
-    #     frame = buffer.tobytes()
-    #     yield (b'--frame\r\n'
-    #            b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-    #         # logging.debug("Frame ends\n\n")
-    # stream.release()
-    # cv.destroyAllWindows()
-    """#############################################看这里############################################"""
-
-    # def run(self):
-    #     cap = cv.VideoCapture(0)
-    #     self.process(cap)
-    #     cap.release()
-    #     cv.destroyAllWindows()
 
 
-# def main():
-#     logging.basicConfig(level=logging.INFO)
-#     face_recog = FaceRegister()
-#     face_recog.run()
-#
-#
-# if __name__ == '__main__':
-#     main()
+
+
+
+
+if __name__ == '__main__':
+    stream=cv.VideoCapture(0)
+    process_faceRead(stream)

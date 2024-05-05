@@ -1,3 +1,8 @@
+// {## ********************************************************************#}
+// {##   * Author: 2024 Jingdi Lei (@https://github.com/kyrieLei)#}
+// {## ********************************************************************#}
+
+
 const socket=new WebSocket("ws://localhost:8094")
 
 const faceReg=document.getElementById('faceReg')

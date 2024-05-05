@@ -1,0 +1,49 @@
+<!--
+# ********************************************************************
+#   * Author: 2024 Jingdi Lei (@https://github.com/kyrieLei)
+# ********************************************************************
+-->
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Register</title>
+        <style type="text/css">
+            body{
+                text-align: center;
+                margin-left: auto;
+                margin-right: auto;
+            }
+        </style>
+    </head>
+    <body>
+        <font size="6" color="#8fbc8f">Register</font>
+        <br />
+        User Name:
+        <input type="text" name="reg_name" id="reg_name" value="" />
+        <br />
+        Password:
+        <input type="text" name="reg_password" id="reg_password" value="" />
+        <br />
+        <button type="button" id="register_btn">register</button>
+        <br />
+    </body>
+    <script type="text/javascript">
+        var register_btn=document.getElementById("register_btn")
+        register_btn.addEventListener("click",function(){
+            var user_name=document.getElementById("reg_name").value;
+            var user_password=document.getElementById("reg_password").value;
+            if(user_name.length==0 || user_password.length==0){
+                alert("Please input your user name or password if you want to register");
+            }
+            else{
+                localStorage.setItem(user_name,user_password)
+                alert("Successfully Registrtion, waiting for login");
+                setTimeout(function (){
+                    window.location.href="Login.html";
+                },100)
+            }
+
+        })
+    </script>
+</html>
