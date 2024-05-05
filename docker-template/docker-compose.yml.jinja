@@ -180,7 +180,7 @@ services:
       - DATA_TOPIC_POSE={{ camera }}-pose-data
       - OUT_TOPIC_GESTURE={{ camera }}-gesture-stream
       - DATA_TOPIC_GESTURE={{ camera }}-gesture-data
-    restart: no
+    restart: unless-stopped
   {# ai-process-{{ camera  }}:
     build:
       context: ./Video_Detection_Part
