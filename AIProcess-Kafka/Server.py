@@ -10,6 +10,15 @@ from VideoProcess.Face_store import face_store
 from VideoProcess.Face_read import FaceRegister
 from kafkacon import KafkaCon
 
+# *******************************************************************
+# * Author: 2024 Kael (956136864@qq.com)
+# *         2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
+# *******************************************************************
+
+# TODO: remove kafka input image
+# TODO: --> recieve image from websocket
+# TODO: --> send replies to websocket and parse from client.js
+
 detector = dlib.get_frontal_face_detector()
 
 async def handle_message(websocket):
@@ -19,10 +28,6 @@ async def handle_message(websocket):
     )
     kafka_con.connect()
     in_topic = os.environ["IN_TOPIC"]
-    # -- 
-    out_topic = os.environ["OUT_TOPIC_" + " new register topic" ]
-    data_topic = os.environ["DATA_TOPIC_" + " new register topic " ]
-    # for output --
     esp_cam = cv.VideoCapture(kafka_con.get_stream(in_topic)) 
     
     face_recog = FaceRegister()
@@ -50,6 +55,9 @@ async def handle_message(websocket):
 
                 face_recog.ss_cnt = 0
                 face_recog.press_n_flag = 1
+                #! send reply
+                await websocket.send('{"ok": true, "msg":"Made folder for new face."}')
+
 
             if len(faces) != 0:
                 for i, d in enumerate(faces):
@@ -83,8 +91,8 @@ async def handle_message(websocket):
                                     for jj in range(width*2):
                                         img_blank[ii][jj] = frame[d.top() - hh + ii][d.left() - ww + jj]
                                 cv.imwrite(current_face_dir + "/img_face_" + str(face_recog.ss_cnt) + ".jpg", img_blank)
-                                kafka_con.send_data(data_topic, ['Face storage succeeded.'] )
-                                ## -- send information
+                                #! send reply
+                                await websocket.send('{"ok": true, "msg":"Save img to face storage succeeded."}')
                             else:
                                 pass
 
@@ -92,19 +100,21 @@ async def handle_message(websocket):
 
             if key == ord('q'):
                 face_store(face_recog.path_photos_from_camera )
+                #! send reply
+                await websocket.send('{"ok": true, "msg":"Updated face storage DB"}')
             
         face_recog.current_frame_faces_cnt = len(faces)
         face_recog.draw_note(frame)
         face_recog.update_fps()
-        # -- 
-        kafka_con.send_frame(out_topic, frame)  
-        # send iamges --
+        # # -- 
+        # kafka_con.send_frame(out_topic, frame)  
+        # #! send iamges --
     kafka_con.close()
     
 
 
 if __name__=="__main__":
-    server=websockets.serve(handle_message, "localhost", 8094)
+    server=websockets.serve(handle_message, "0.0.0.0", 8100)
     asyncio.get_event_loop().run_until_complete(server)
     asyncio.get_event_loop().run_forever()
 
