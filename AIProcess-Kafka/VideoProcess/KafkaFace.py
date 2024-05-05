@@ -7,7 +7,7 @@
 # ********************************************************************
 
 import logging
-from Face_store import detector,predictor,face_reco_model
+from VideoProcess.Face_store import detector,predictor,face_reco_model
 import cv2 as cv
 import time
 import numpy as np
