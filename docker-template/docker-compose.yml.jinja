@@ -159,7 +159,7 @@ services:
   {# TODO: AI Processors #}
   {%- for i in range(env.CAMERAS.split(',') | length) %}
   {%- set camera = env.CAMERAS.split(',')[i] -%}
-  
+
   # Python AI Video Processing
   # Kafka Camera Streams -> Python AI -> Kafka AI Streams + Data
   # for face, pose and gesture recognition
@@ -219,6 +219,7 @@ services:
       - MJPEG_SERVER=mjpegstreamer:8095
       - IN_TOPIC={{ camera }}-stream
     restart: unless-stopped
+    {# TODO: move this outside loop, single instance not using Kafka #}
   {%- endfor %}
 
   {# TODO: API Server #}
