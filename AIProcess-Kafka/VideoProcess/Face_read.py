@@ -16,7 +16,7 @@ detector = dlib.get_frontal_face_detector()
 
 class FaceRegister:
     def __init__(self):
-        self.path_photos_from_camera = "./VideoProcess/Data/data_faces/"
+        self.path_photos_from_camera = "./../AIProcess-Data/data_faces/init/"
         self.font = cv.FONT_ITALIC
         self.existing_faces_cnt = 0
         self.ss_cnt = 0
@@ -41,8 +41,8 @@ class FaceRegister:
         folders_rd = os.listdir(self.path_photos_from_camera)
         for i in range(len(folders_rd)):
             shutil.rmtree(self.path_photos_from_camera + folders_rd[i])
-        if os.path.isfile("Data/features.csv"):
-            os.remove("Data/features.csv")
+        if os.path.isfile("./../AIProcess-Data/features.csv"):
+            os.remove("./../AIProcess-Data/features.csv")
 
     def check_existing_faces_cnt(self):
         if os.listdir(self.path_photos_from_camera):
@@ -65,102 +65,102 @@ class FaceRegister:
         self.frame_start_time = now
 
     def draw_note(self, img_rd):
-        cv.putText(img_rd, "FPS:   " + str(self.fps_show.__round__(2)), (20, 100), self.font, 0.8, (0, 255, 0), 1,
-                   cv.LINE_AA)
+        # cv.putText(img_rd, "FPS:   " + str(self.fps_show.__round__(2)), (20, 100), self.font, 0.8, (0, 255, 0), 1,
+        #            cv.LINE_AA)
         cv.putText(img_rd, "Faces: " + str(self.current_frame_faces_cnt), (20, 140), self.font, 0.8, (0, 255, 0), 1,
                    cv.LINE_AA)
         cv.putText(img_rd, "N: Create face folder", (20, 350), self.font, 0.8, (255, 255, 255), 1, cv.LINE_AA)
         cv.putText(img_rd, "S: Save current face", (20, 400), self.font, 0.8, (255, 255, 255), 1, cv.LINE_AA)
         cv.putText(img_rd, "Q: Quit", (20, 450), self.font, 0.8, (255, 255, 255), 1, cv.LINE_AA)
 
-def process_faceRead(stream):
-    face_recog = FaceRegister()
+# def process_faceRead(stream):
+#     face_recog = FaceRegister()
 
 
-    face_recog.mkdir_store()
+#     face_recog.mkdir_store()
 
-    face_recog.check_existing_faces_cnt()
+#     face_recog.check_existing_faces_cnt()
 
-    while stream.isOpened():
-        flag, frame = stream.read()
-        k = cv.waitKey(1)
-        faces = detector(frame)
+#     while stream.isOpened():
+#         flag, frame = stream.read()
+#         k = cv.waitKey(1)
+#         faces = detector(frame)
 
-        if k == ord('n'):
-            face_recog.existing_faces_cnt += 1
-            current_face_dir = face_recog.path_photos_from_camera + "person_" + str(face_recog.existing_faces_cnt)
-            os.mkdir(current_face_dir)
-            # logging.info("\n%-40s %s", "Create folders:", current_face_dir)
+#         if k == ord('n'):
+#             face_recog.existing_faces_cnt += 1
+#             current_face_dir = face_recog.path_photos_from_camera + "person_" + str(face_recog.existing_faces_cnt)
+#             os.mkdir(current_face_dir)
+#             # logging.info("\n%-40s %s", "Create folders:", current_face_dir)
 
-            face_recog.ss_cnt = 0
-            face_recog.press_n_flag = 1
+#             face_recog.ss_cnt = 0
+#             face_recog.press_n_flag = 1
 
-        if len(faces) != 0:
-            for i, d in enumerate(faces):
-                height = (d.bottom() - d.top())
-                width = (d.right() - d.left())
-                hh = int(height / 2)
-                ww = int(width / 2)
+#         if len(faces) != 0:
+#             for i, d in enumerate(faces):
+#                 height = (d.bottom() - d.top())
+#                 width = (d.right() - d.left())
+#                 hh = int(height / 2)
+#                 ww = int(width / 2)
 
-                if (d.right() + ww) > 1400 or (d.bottom() + hh > 1100) or (d.left() - ww < 0) or (d.top() - hh < 0):
-                    color = (0, 0, 255)
-                    save_flag = 0
-                    if k == ord('s'):
-                        pass
-                        # logging.warning("please keep far from your present position")
+#                 if (d.right() + ww) > 1400 or (d.bottom() + hh > 1100) or (d.left() - ww < 0) or (d.top() - hh < 0):
+#                     color = (0, 0, 255)
+#                     save_flag = 0
+#                     if k == ord('s'):
+#                         pass
+#                         # logging.warning("please keep far from your present position")
 
-                else:
-                    color = (255, 255, 255)
-                    save_flag = 1
+#                 else:
+#                     color = (255, 255, 255)
+#                     save_flag = 1
 
-                cv.rectangle(frame, tuple([d.left() - ww, d.top() - hh]),
-                             tuple([d.right() + ww, d.bottom() + hh]),
-                             color, thickness=2)
-                img_blank = np.zeros((int(height*2), width*2, 3), np.uint8)
+#                 cv.rectangle(frame, tuple([d.left() - ww, d.top() - hh]),
+#                              tuple([d.right() + ww, d.bottom() + hh]),
+#                              color, thickness=2)
+#                 img_blank = np.zeros((int(height*2), width*2, 3), np.uint8)
 
-                if save_flag:
+#                 if save_flag:
 
-                    if k == ord('s'):
+#                     if k == ord('s'):
 
-                        if face_recog.press_n_flag:
-                            face_recog.ss_cnt += 1
-                            for ii in range(height*2):
-                                for jj in range(width*2):
-                                    img_blank[ii][jj] = frame[d.top() - hh + ii][d.left() - ww + jj]
-                            cv.imwrite(current_face_dir + "/img_face_" + str(face_recog.ss_cnt) + ".jpg", img_blank)
-                            # logging.info("%-40s %s/img_face_%s.jpg", "Save into：",
-                            #               str(current_face_dir), str(face_recog.ss_cnt))
-                        else:
-                            pass
-                            # logging.warning("Please press 'N' and then press 'S'")
+#                         if face_recog.press_n_flag:
+#                             face_recog.ss_cnt += 1
+#                             for ii in range(height*2):
+#                                 for jj in range(width*2):
+#                                     img_blank[ii][jj] = frame[d.top() - hh + ii][d.left() - ww + jj]
+#                             cv.imwrite(current_face_dir + "/img_face_" + str(face_recog.ss_cnt) + ".jpg", img_blank)
+#                             # logging.info("%-40s %s/img_face_%s.jpg", "Save into：",
+#                             #               str(current_face_dir), str(face_recog.ss_cnt))
+#                         else:
+#                             pass
+#                             # logging.warning("Please press 'N' and then press 'S'")
 
-        face_recog.current_frame_faces_cnt = len(faces)
+#         face_recog.current_frame_faces_cnt = len(faces)
 
-        face_recog.draw_note(frame)
+#         face_recog.draw_note(frame)
 
-        if k == ord('q'):
-            break
+#         if k == ord('q'):
+#             break
 
-        face_recog.update_fps()
-    # stream.release()
-    # cv.destroyAllWindows()
+#         face_recog.update_fps()
+#     # stream.release()
+#     # cv.destroyAllWindows()
 
-        cv.imshow("camera", frame)
+#         cv.imshow("camera", frame)
 
-        # ret, buffer = cv.imencode('.jpg', frame)
-        # frame = buffer.tobytes()
-        # yield (b'--frame\r\n'
-        #        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
-        #     # logging.debug("Frame ends\n\n")
-    stream.release()
-    cv.destroyAllWindows()
-    """#############################################看这里############################################"""
-
-
-
+#         # ret, buffer = cv.imencode('.jpg', frame)
+#         # frame = buffer.tobytes()
+#         # yield (b'--frame\r\n'
+#         #        b'Content-Type: image/jpeg\r\n\r\n' + frame + b'\r\n')
+#         #     # logging.debug("Frame ends\n\n")
+#     stream.release()
+#     cv.destroyAllWindows()
+#     """#############################################看这里############################################"""
 
 
 
-if __name__ == '__main__':
-    stream=cv.VideoCapture(0)
-    process_faceRead(stream)
+
+
+
+# if __name__ == '__main__':
+#     stream=cv.VideoCapture(0)
+#     process_faceRead(stream)
