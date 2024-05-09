@@ -20,6 +20,8 @@ from VideoProcess.Face_read import FaceRegister
 # TODO: --> send replies to websocket and parse from client.js
 # TODO: --> add "q" button on the website
 
+# TODO: monitor kafaka data channel, local cache and send via websocket on request
+
 detector = dlib.get_frontal_face_detector()
 # esp_cam = cv.VideoCapture(0 ) 
 # kafka_con = KafkaCon(
