@@ -11,15 +11,17 @@ import numpy as np
 import logging
 import cv2 as cv
 
-path_images_from_camera="Data/data_faces/"
+path_images_from_camera="./../../AIProcess-Data/data_faces/"
 detector=dlib.get_frontal_face_detector()
 
 #特征检测
-predictor=dlib.shape_predictor("Data/data_dlib/shape_predictor_68_face_landmarks.dat")
+predictor=dlib.shape_predictor("./../AIProcess-Data/data_dlib/shape_predictor_68_face_landmarks.dat")
+# predictor=dlib.shape_predictor("AIProcess-Data\data_dlib\shape_predictor_68_face_landmarks.dat")
+
 
 
 #人脸识别
-face_reco_model=dlib.face_recognition_model_v1("Data/data_dlib/dlib_face_recognition_resnet_model_v1.dat")
+face_reco_model=dlib.face_recognition_model_v1("./../AIProcess-Data/data_dlib/dlib_face_recognition_resnet_model_v1.dat")
 
 def return_128d_features(path_img):
     img=cv.imread(path_img)
@@ -56,10 +58,11 @@ def features_mean_PersonX(path_face):
 
 def face_store(path ):
     logging.basicConfig(level=logging.INFO)
-    person_list = os.listdir("Data/data_faces")
+    # person_list = os.listdir("../../AIProcess-Data/data_faces")
+    person_list = os.listdir(path)
     person_list.sort()
 
-    with open("Data/features.csv","w",newline="") as f:
+    with open("../../AIProcess-Data/features.csv","w",newline="") as f:
         writer=csv.writer(f)
         for person in person_list:
             logging.info("%sperson_%s", path, person)

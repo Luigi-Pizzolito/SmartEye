@@ -157,7 +157,9 @@ services:
       - ./WebInterface:/usr/share/nginx/html
     
   {# TODO: AI Processors #}
-  {%- for camera in env.CAMERAS.split(',') %}
+  {%- for i in range(env.CAMERAS.split(',') | length) %}
+  {%- set camera = env.CAMERAS.split(',')[i] -%}
+
   # Python AI Video Processing
   # Kafka Camera Streams -> Python AI -> Kafka AI Streams + Data
   # for face, pose and gesture recognition
@@ -170,6 +172,8 @@ services:
     depends_on:
       - kafka
       - mjpegstreamer
+    volumes:
+      - ./AIProcess-Data:/app/VideoProcess/Data
     environment:
       - KAFKA_SERVERS=kafka:9092
       - MJPEG_SERVER=mjpegstreamer:8095
@@ -196,6 +200,26 @@ services:
     ports:
       - 8096:8096
     restart: no #}
+  
+  ai-process-kafka-sockapi-{{ camera }}:
+    build:
+      context: ./AIProcess-Kafka
+      dockerfile: ../dockerfiles/AIProcess-API.Dockerfile
+    networks:
+      - kafka-net
+    ports: 
+      - {{ 8100 + i }}:8100
+    depends_on:
+      - kafka
+      - mjpegstreamer
+    volumes:
+      - ./AIProcess-Data:/app/VideoProcess/Data
+    environment:
+      - KAFKA_SERVERS=kafka:9092
+      - MJPEG_SERVER=mjpegstreamer:8095
+      - IN_TOPIC={{ camera }}-stream
+    restart: unless-stopped
+    {# TODO: move this outside loop, single instance not using Kafka #}
   {%- endfor %}
 
   {# TODO: API Server #}

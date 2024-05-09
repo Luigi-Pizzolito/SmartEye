@@ -1,9 +1,8 @@
-// {## ********************************************************************#}
-// {##   * Author: 2024 Jingdi Lei (@https://github.com/kyrieLei)#}
-// {## ********************************************************************#}
+// ********************************************************************
+//    * Author: 2024 Jingdi Lei (@https://github.com/kyrieLei)#}
+// ********************************************************************
 
-
-const socket=new WebSocket("ws://localhost:8094")
+const socket=new WebSocket("ws://localhost:8100")
 
 const faceReg=document.getElementById('faceReg')
 const faceSave=document.getElementById('faceSaved')

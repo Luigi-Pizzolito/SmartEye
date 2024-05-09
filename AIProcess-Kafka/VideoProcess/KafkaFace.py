@@ -61,7 +61,7 @@ class FaceRecognizer:
         self.reclassify_interval = 10
 
     def get_faces_database(self):
-        path_features_known_csv = "VideoProcess/Data/features.csv"
+        path_features_known_csv = "./VideoProcess/Data/features.csv"
         if os.path.exists(path_features_known_csv):
 
             csv_rd = pd.read_csv(path_features_known_csv, header=None)
