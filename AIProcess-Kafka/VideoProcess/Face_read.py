@@ -16,7 +16,7 @@ detector = dlib.get_frontal_face_detector()
 
 class FaceRegister:
     def __init__(self):
-        self.path_photos_from_camera = "./../AIProcess-Data/data_faces/init/"
+        self.path_photos_from_camera = "./VideoProcess/Data/data_faces/init/"
         self.font = cv.FONT_ITALIC
         self.existing_faces_cnt = 0
         self.ss_cnt = 0
@@ -41,8 +41,8 @@ class FaceRegister:
         folders_rd = os.listdir(self.path_photos_from_camera)
         for i in range(len(folders_rd)):
             shutil.rmtree(self.path_photos_from_camera + folders_rd[i])
-        if os.path.isfile("./../AIProcess-Data/features.csv"):
-            os.remove("./../AIProcess-Data/features.csv")
+        if os.path.isfile("./VideoProcess/Data/features.csv"):
+            os.remove("./VideoProcess/Data/features.csv")
 
     def check_existing_faces_cnt(self):
         if os.listdir(self.path_photos_from_camera):
