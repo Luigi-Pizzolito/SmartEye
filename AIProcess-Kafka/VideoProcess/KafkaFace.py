@@ -144,6 +144,7 @@ class FaceRecognizer:
         if self.get_faces_database():
             while stream.isOpened():
                 kafka_data = {} # -- store the imformation to send
+                facesout = []
                 
                 self.frame_cnt +=1
                 logging.debug("Frame"+str(self.frame_cnt)+"starts")
@@ -165,6 +166,8 @@ class FaceRecognizer:
                 self.last_frame_face_centroid_list = self.current_frame_face_centroid_list
                 self.current_frame_face_centroid_list = []
 
+                kafka_data = {'camera': self.topiccam, 'faces':[]}
+
                 if (
                         self.current_frame_face_cnt == self.last_frame_face_cnt
                         and self.reclassify_interval_cnt!= self.reclassify_interval
@@ -174,7 +177,8 @@ class FaceRecognizer:
                     self.current_frame_face_position_list=[]
                     if "unknown" in self.current_frame_face_name_list:
                         logging.debug("检测到未知人脸")
-                        kafka_data.append("Unknown face has been detected. ")
+                        # kafka_data.append("Unknown face has been detected. ")
+                        facesout.append('Unknown')
                         self.reclassify_interval_cnt+=1
 
 
@@ -225,7 +229,7 @@ class FaceRecognizer:
                             )
                             self.current_frame_face_name_list.append("unknown")
 
-                        facesout = []
+                        
 
                         for j in range(len(faces)):
                             logging.debug("  For face %d in current frame:", j + 1)

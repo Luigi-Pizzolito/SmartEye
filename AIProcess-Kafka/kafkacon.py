@@ -49,6 +49,8 @@ class KafkaCon:
         self.producer.send(topic, value=json_string.encode('utf-8'))
 
     #TODO: get_data Kafka consumer for incoming APIs, using asyncio
+    def get_data(self, topic):
+        pass
 
     def close(self):
         # Producer connections

@@ -121,7 +121,7 @@ class GestureDetection:
 
     def detect(self,cam,  kafka, out_topic, data_topic  ):
         while True:
-            kafka_data = {}
+            kafka_data = {'camera': self.topiccam, 'hand':''}
             ret, frame = cam.read()
 
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)

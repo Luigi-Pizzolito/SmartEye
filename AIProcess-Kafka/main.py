@@ -42,7 +42,7 @@ def DetectionProcess(process, handle):
         esp_cam = cv2.VideoCapture(kafka_con.get_stream(in_topic))       
         process(esp_cam, kafka_con, out_topic, data_topic )
     except Exception as e:
-        kafka_con.send_data(data_topic, [f"Error(s) raised in {handle } Process with exception {e }." ] )
+        # kafka_con.send_data(data_topic, [f"Error(s) raised in {handle } Process with exception {e }." ] )
         raise Exception(f"Error(s) raised in {handle } Process with exception {e }." )
     
     # close Kafka connection when program exits
