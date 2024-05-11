@@ -1,8 +1,8 @@
 # ********************************************************************
 #   * Author: 2024 Jingdi Lei (@https://github.com/kyrieLei)
 #
-#   * Last Edit: Kael 956136864@qq.com
-#   * Last Edit Date: 2024.04.10
+#   * Last Edit: Kael 956136864@qq.com and Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
+#   * Last Edit Date: 2024.05.11
 #   * Commit: Kafka I/O
 # ********************************************************************
 
@@ -10,6 +10,7 @@
 import cv2
 import mediapipe as mp
 import math
+import os
 
 class GestureDetection:
     def __init__(self):
@@ -20,6 +21,9 @@ class GestureDetection:
             max_num_hands=3,
             min_detection_confidence=0.75,
             min_tracking_confidence=0.75)
+        
+        #kafakasend
+        self.topiccam = os.environ["IN_TOPIC"]
 
 
     def vector_2d_angle(self,v1, v2):
@@ -117,8 +121,7 @@ class GestureDetection:
 
     def detect(self,cam,  kafka, out_topic, data_topic  ):
         while True:
-            kafka_data = [] # -- store the imformation to send
-            
+            kafka_data = {}
             ret, frame = cam.read()
 
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
@@ -138,10 +141,11 @@ class GestureDetection:
                         angle_list = self.hand_angle(hand_local)
                         gesture_str = self.h_gesture(angle_list)
                         cv2.putText(frame, gesture_str, (0, 100), 0, 1.3, (0, 0, 255), 3)
-                        kafka_data.append(gesture_str )
+                        # kafka_data.append(gesture_str)
+                        kafka_data = {'camera': self.topiccam, 'hand':gesture_str}
                         
-            kafka.send_frame(out_topic, frame )
-            kafka.send_data(data_topic, kafka_data )
+            kafka.send_frame(out_topic, frame)
+            kafka.send_data(data_topic, kafka_data)
             # cv2.imshow('Hands', frame)
         #     if cv2.waitKey(1) == ord('q'):
         #         break

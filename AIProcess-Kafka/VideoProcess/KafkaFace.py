@@ -1,8 +1,8 @@
 # ********************************************************************
 #   * Author: 2024 Jingdi Lei (@https://github.com/kyrieLei)
 #
-#   * Last Edit: Kael 956136864@qq.com
-#   * Last Edit Date: 2024.04.10
+#   * Last Edit: Kael 956136864@qq.com and 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
+#   * Last Edit Date: 2024.05.11
 #   * Commit: Kafka I/O
 # ********************************************************************
 
@@ -59,6 +59,9 @@ class FaceRecognizer:
         # 如果识别出 "unknown" 的脸, 将在 reclassify_interval_cnt 计数到 reclassify_interval 后, 对于人脸进行重新识别
         self.reclassify_interval_cnt = 0
         self.reclassify_interval = 10
+
+        # kafkasend
+        self.topiccam = os.environ["IN_TOPIC"]
 
     def get_faces_database(self):
         path_features_known_csv = "./VideoProcess/Data/features.csv"
@@ -140,7 +143,7 @@ class FaceRecognizer:
     def process(self, stream, kafka, out_topic, data_topic):        
         if self.get_faces_database():
             while stream.isOpened():
-                kafka_data = [] # -- store the imformation to send
+                kafka_data = {} # -- store the imformation to send
                 
                 self.frame_cnt +=1
                 logging.debug("Frame"+str(self.frame_cnt)+"starts")
@@ -167,7 +170,7 @@ class FaceRecognizer:
                         and self.reclassify_interval_cnt!= self.reclassify_interval
                 ):
                     logging.debug("Scene 1: No face changed")
-                    kafka_data.append("No face changed. ")
+                    # kafka_data.append("No face changed. ")
                     self.current_frame_face_position_list=[]
                     if "unknown" in self.current_frame_face_name_list:
                         logging.debug("检测到未知人脸")
@@ -199,7 +202,7 @@ class FaceRecognizer:
 
                 else:
                     logging.debug("Scene 2: Faces cnt changes in this frame")
-                    kafka_data.append("Face changes. " )
+                    # kafka_data.append("Face changes. " )
                     self.current_frame_face_position_list = []
                     self.current_frame_face_X_e_distance_list = []
                     self.current_frame_face_feature_list = []
@@ -208,11 +211,12 @@ class FaceRecognizer:
                     #若当前没有人脸
                     if self.current_frame_face_cnt ==0:
                         logging.debug("No faces in this frame")
-                        kafka_data.append("No face has been detected" )
+                        # kafka_data.append("No face has been detected" )
+                        kafka_data = {'camera': self.topiccam, 'faces':[]}
                         self.current_frame_face_name_list=[]
                     else:
                         logging.debug("Get faces in this frame")
-                        kafka_data.append("Faces have been detected. " )
+                        # kafka_data.append("Faces have been detected. " )
                         self.current_frame_face_name_list=[]
                         for i in range(len(faces)):
                             shape=predictor(img,faces[i])
@@ -220,6 +224,8 @@ class FaceRecognizer:
                                 face_reco_model.compute_face_descriptor(img,shape)
                             )
                             self.current_frame_face_name_list.append("unknown")
+
+                        facesout = []
 
                         for j in range(len(faces)):
                             logging.debug("  For face %d in current frame:", j + 1)
@@ -254,11 +260,15 @@ class FaceRecognizer:
                                 self.current_frame_face_name_list[j] = self.face_name_known_list[similar_person_num]
                                 logging.debug("  Face recognition result: %s",
                                               self.face_name_known_list[similar_person_num] )
-                                kafka_data.append("Face recognition result: " + \
-                                    str(self.face_name_known_list[similar_person_num] ) )
+                                # kafka_data.append("Face recognition result: " + \
+                                #     str(self.face_name_known_list[similar_person_num] ) )
+                                facesout.append(self.face_name_known_list[similar_person_num])
                             else:
                                 logging.debug("  Face recognition result: Unknown person")
-                                kafka_data.append("Face recognition result: Unknown person. " )
+                                # kafka_data.append("Face recognition result: Unknown person. " )
+                                facesout.append('Unknown')
+
+                        kafka_data = {'camera': self.topiccam, 'faces':['Unknown']}
 
                         self.draw_note(img)
 

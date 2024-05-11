@@ -1,13 +1,14 @@
 # ********************************************************************
 #   * Author: 2024 Jingdi Lei (@https://github.com/kyrieLei)
 #
-#   * Last Edit: Kael 956136864@qq.com
-#   * Last Edit Date: 2024.04.10
+#   * Last Edit: Kael 956136864@qq.com and 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
+#   * Last Edit Date: 2024.05.11
 #   * Commit: Kafka I/O
 # ********************************************************************
 import cv2
 import mediapipe as mp
 import numpy as np
+import os
 
 
 
@@ -18,6 +19,9 @@ class FallDetection:
 
         self.mp_pose = mp.solutions.pose
         self.mp_drawing = mp.solutions.drawing_utils
+
+        #kafkasend
+        self.topiccam = os.environ["IN_TOPIC"]
 
     def calculate_angle(self,a, b, c):
         a = np.array(a)
@@ -61,7 +65,7 @@ class FallDetection:
                 min_detection_confidence=0.7, min_tracking_confidence=0.7
         ) as pose:
             while cam.isOpened():
-                kafka_data = [] # -- store the imformation to send
+                kafka_data = {} # -- store the information to send
                 ret, frame = cam.read()
                 if not ret:
                     break
@@ -104,7 +108,8 @@ class FallDetection:
                                           self.mp_drawing.DrawingSpec(color=(245, 66, 230), thickness=2, circle_radius=2)
                                           )
 
-                kafka_data.append(self.stage )
+                # kafka_data.append(self.stage)
+                kafka_data = {'camera': self.topiccam, 'fall':self.stage}
                 kafka.send_frame(out_topic, image )
                 kafka.send_data(data_topic, kafka_data )
             #     cv2.imshow('Camera', image)
