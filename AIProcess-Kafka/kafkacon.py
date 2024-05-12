@@ -7,8 +7,6 @@ import json
 # * Author: 2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
 # *******************************************************************
 
-#TODO: test this class
-
 #? for recieving frames we just read the HTTP MJPEG stream from the stream server
 class KafkaCon:
     def __init__(self, bootstrap_servers, mjpeg_host):
@@ -47,10 +45,6 @@ class KafkaCon:
         json_string = json.dumps(data, separators=(',', ':'))
         # Send to Kafka topic
         self.producer.send(topic, value=json_string.encode('utf-8'))
-
-    #TODO: get_data Kafka consumer for incoming APIs, using asyncio
-    def get_data(self, topic):
-        pass
 
     def close(self):
         # Producer connections

@@ -35,6 +35,6 @@ RUN chmod +x /usr/local/bin/wait-for-it
 COPY . /app
 
 # Run app.py when the container launches
-CMD ["wait-for-it", "-s", "kafka:9092", "--", "python", "Server.py"]
+CMD ["wait-for-it", "-s", "kafka:9092", "--", "python", "devServedata.py"]
 # CMD ["python", "main.py"]
 
