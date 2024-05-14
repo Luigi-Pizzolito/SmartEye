@@ -62,7 +62,7 @@ def face_store(path ):
     person_list = os.listdir(path)
     person_list.sort()
 
-    with open("../VideoProcess/Data/features.csv","w",newline="") as f:
+    with open("./VideoProcess/Data/features.csv","w",newline="") as f:
         writer=csv.writer(f)
         for person in person_list:
             logging.info("%sperson_%s", path, person)

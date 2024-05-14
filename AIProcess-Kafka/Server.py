@@ -4,6 +4,9 @@ import json
 import os
 import cv2 as cv
 import numpy as np
+from io import BytesIO
+from PIL import Image
+import base64
 import time
 import dlib
 from VideoProcess.Face_store import face_store
@@ -14,45 +17,47 @@ from VideoProcess.Face_read import FaceRegister
 # *         2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
 # *******************************************************************
 
-# TODO: --> recieve image from websocket
 # TODO: --> send replies to websocket and parse from client.js
-# TODO: --> add "q" button on the website
 
 # TODO: monitor kafaka data channel, local cache and send via websocket on request
 
 detector = dlib.get_frontal_face_detector()
-
-
-esp_cam = cv.VideoCapture(0 ) #TODO: Replace this for websocket recieve and read .jpeg
-
+# esp_cam = cv.VideoCapture(0 ) 
 
 async def handle_message(websocket):
     face_recog = FaceRegister()
     face_recog.mkdir_store()
     face_recog.check_existing_faces_cnt()
-    
-    while esp_cam.isOpened():
-        async for message in websocket:
-            flag, frame = esp_cam.read()
+        
+    async for message in websocket:
+        try:
+            # -- receive images from websocket
+            frame =  np.frombuffer(message, np.uint8)
+            frame = cv.imdecode(frame, cv.IMREAD_COLOR)
+            
             faces = detector(frame)
             face_recog.current_frame_faces_cnt = len(faces)
             face_recog.draw_note(frame)
+        except Exception as e:
+            # -- receive actions from websocket
             # face_recog.update_fps()
             data=json.loads(message)
             key = data.get('action')
 
             if key == 'r':
                 print("New dir")
-                face_recog.existing_faces_cnt += 1
+                # face_recog.existing_faces_cnt += 1
                 current_timestamp = time.time()
                 local_time = str(time.localtime(current_timestamp) )
                 time_now = local_time.replace(" ", "")
-                face_recog.path_photos_from_camera = '../AIProcess-Data/data_faces/' + time_now
+                # face_recog.path_photos_from_camera = '../AIProcess-Data/data_faces/' + time_now
+                face_recog.path_photos_from_camera = './VideoProcess/Data/data_faces/' + time_now
                 if not os.path.isdir(face_recog.path_photos_from_camera):
                     os.makedirs(face_recog.path_photos_from_camera )
                 
-                current_face_dir = face_recog.path_photos_from_camera + "/person_" + str(face_recog.existing_faces_cnt)
-                os.mkdir(current_face_dir)
+                current_face_dir = face_recog.path_photos_from_camera 
+                # current_face_dir = face_recog.path_photos_from_camera + "/person_" + str(face_recog.existing_faces_cnt)
+                # os.mkdir(current_face_dir)
 
                 face_recog.ss_cnt = 0
                 face_recog.press_n_flag = 1
@@ -82,8 +87,8 @@ async def handle_message(websocket):
                             tuple([d.right() + ww, d.bottom() + hh]),
                             color, thickness=2)
                 img_blank = np.zeros((int(height*2), width*2, 3), np.uint8)
-                cv.imshow('rec',frame)
-                cv.waitKey(1)
+                # cv.imshow('rec',frame)
+                # cv.waitKey(1)
                 
             else: 
                 save_flag = 0
@@ -106,9 +111,9 @@ async def handle_message(websocket):
             if key == 'q':
                 print("Updated face storage")            
                 await websocket.send('{"ok": true, "msg":"Updated face storage DB"}')
-                face_store(face_recog.path_photos_from_camera )
+                # face_store("../AIProcess-Data/data_faces/" )
+                face_store("./VideoProcess/Data/data_faces/" )
 
-    esp_cam.release()
     
 
 

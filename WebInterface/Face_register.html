@@ -92,11 +92,23 @@ MAIN
 		<div class="col-md-8">
 			<div class="mb-3 d-flex justify-content-between ">
                 <video id="videoElement" autoplay></video>
+				<!-- <img src="image-container"> -->
+				<!-- <div id="image-container"></div> -->
+				<!-- <script>
+					var ws = new WebSocket('ws://localhost:8100');
+					ws.onmessage = function(event) {
+						var img = new Image();
+						img.src = 'data:image/jpeg;base64,' + event.data;
+
+						document.getElementById('image-container').appendChild(img);
+					};
+				</script> -->
 			</div>
 		</div>
 		<div class="col-md-4 align-items-start">
             <button id="faceReg" class="btn btn-orange d-block mb-4" style="width:160px">Face Register</button>
-            <button id="faceSaved" class="btn btn-orange d-block" style="width:160px">Face Saved</button>
+            <button id="faceSaved" class="btn btn-orange d-block mb-4" style="width:160px">Face Saved</button>
+            <button id="faceLoad" class="btn btn-orange d-block" style="width:160px">Face Load</button>
 		</div>
 	</div>
 </div> 
