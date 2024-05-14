@@ -52,21 +52,21 @@ services:
     #  - KAFKA_CFG_CONTROLLER_LISTENER_NAMES=CONTROLLER
     #  - KAFKA_CFG_AUTO_CREATE_TOPICS_ENABLE=true
       KAFKA_LISTENERS: INSIDE://0.0.0.0:9092,OUTSIDE://0.0.0.0:29092
-      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9092,OUTSIDE://192.168.1.103:29092
+      KAFKA_ADVERTISED_LISTENERS: INSIDE://kafka:9092,OUTSIDE://{{ env.HOST_IP }}:29092
       KAFKA_LISTENER_SECURITY_PROTOCOL_MAP: INSIDE:PLAINTEXT,OUTSIDE:PLAINTEXT
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
       KAFKA_INTER_BROKER_LISTENER_NAME: INSIDE
-      KAFKA_LOG_SEGMENT_DELETE_DELAY_MS: 100
-      KAFKA_LOG_CLEANER_DELETE_RETENTION_MS: 100
-      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: 1000
-      KAFKA_OFFSETS_RETENTION_CHECK_INTERVAL_MS: 1000
+      KAFKA_LOG_SEGMENT_DELETE_DELAY_MS: {{ env.KAFKA_RETENTION_DELAY_MS }}
+      KAFKA_LOG_CLEANER_DELETE_RETENTION_MS: {{ env.KAFKA_RETENTION_DELAY_MS }}
+      KAFKA_LOG_RETENTION_CHECK_INTERVAL_MS: {{ env.KAFKA_RETENTION_DELAY_MS }}
+      KAFKA_OFFSETS_RETENTION_CHECK_INTERVAL_MS: {{ env.KAFKA_RETENTION_DELAY_MS }}
       KAFKA_LOG_RETENTION_HOURS: 0
       KAFKA_LOG_RETENTION_MINUTES: 0
-      KAFKA_LOG_RETENTION_MS: 1000
+      KAFKA_LOG_RETENTION_MS: {{ env.KAFKA_RETENTION_DELAY_MS }}
       KAFKA_OFFSET_RETENTION_HOURS: 0
       KAFKA_OFFSET_RETENTION_MINUTES: 0
-      KAFKA_OFFSET_RETENTION_MS: 1000
-      KAFKA_LOG_FLUSH_INTERVAL_MS: 500
+      KAFKA_OFFSET_RETENTION_MS: {{ env.KAFKA_RETENTION_DELAY_MS }}
+      KAFKA_LOG_FLUSH_INTERVAL_MS: {{ env.KAFKA_RETENTION_DELAY_MS }}
       KAFKA_LOG_FLUSH_INTERVAL_MESSAGES: 100
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
@@ -90,7 +90,7 @@ services:
     environment:
       DYNAMIC_CONFIG_ENABLED: 'true'
       KAFKA_CLUSTERS_0_NAME: localhost-SmartEye
-      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: 192.168.1.104:29092
+      KAFKA_CLUSTERS_0_BOOTSTRAPSERVERS: {{ env.HOST_IP }}:29092
       KAFKA_CLUSTERS_1_NAME: docker-SmartEye
       KAFKA_CLUSTERS_1_BOOTSTRAPSERVERS: kafka:29092
     ports:
@@ -153,7 +153,9 @@ services:
     volumes:
       - ./WebInterface:/usr/share/nginx/html
     
-  {# TODO: AI Processors #}
+
+
+  # AI Processors for each camera
   {%- for i in range(env.CAMERAS.split(',') | length) %}
   {%- set camera = env.CAMERAS.split(',')[i] -%}
 
@@ -183,7 +185,7 @@ services:
       - DATA_TOPIC_GESTURE=data
     restart: unless-stopped
   
-  # WebSocket API for face register
+  # WebSocket API for face register for each camera
   # accepts websocket message and image from local webcam to register new face
   # -> then we must restart the AI processes manually
   ai-process-kafka-sockapi-{{ camera }}:
@@ -219,8 +221,7 @@ services:
       - KAFKA_SERVERS=kafka:9092
       - DATA_TOPIC=data
       - DATA_PORT=8200
+    restart: unless-stopped
 
   {# TODO: MQTT Server #}
   {# TODO: Kafka<->MQTT Bridge #}
-
-  {# TODO: Re-organise this file #}
