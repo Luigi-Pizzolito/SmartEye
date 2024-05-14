@@ -8,14 +8,12 @@ import time
 import dlib
 from VideoProcess.Face_store import face_store
 from VideoProcess.Face_read import FaceRegister
-# from kafkacon import KafkaCon
 
 # *******************************************************************
 # * Author: 2024 Kael (956136864@qq.com)
 # *         2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
 # *******************************************************************
 
-# TODO: remove kafka input image
 # TODO: --> recieve image from websocket
 # TODO: --> send replies to websocket and parse from client.js
 # TODO: --> add "q" button on the website
@@ -23,17 +21,10 @@ from VideoProcess.Face_read import FaceRegister
 # TODO: monitor kafaka data channel, local cache and send via websocket on request
 
 detector = dlib.get_frontal_face_detector()
-# esp_cam = cv.VideoCapture(0 ) 
-# kafka_con = KafkaCon(
-#         bootstrap_servers=os.environ["KAFKA_SERVERS"],
-#         mjpeg_host=os.environ["MJPEG_SERVER"]
-#     )
-# kafka_con.connect()
-# in_topic = os.environ["IN_TOPIC"]
-# esp_cam = cv.VideoCapture(kafka_con.get_stream(in_topic)) 
-# --
-esp_cam = cv.VideoCapture(0 ) 
-# test --
+
+
+esp_cam = cv.VideoCapture(0 ) #TODO: Replace this for websocket recieve and read .jpeg
+
 
 async def handle_message(websocket):
     face_recog = FaceRegister()
@@ -117,10 +108,7 @@ async def handle_message(websocket):
                 await websocket.send('{"ok": true, "msg":"Updated face storage DB"}')
                 face_store(face_recog.path_photos_from_camera )
 
-    # --
     esp_cam.release()
-    # test --
-    # kafka_con.close()
     
 
 

@@ -123,11 +123,6 @@ services:
       - kafka
     restart: unless-stopped
   {%- endfor %}
-    # deploy:
-    #   restart_policy:
-    #     condition: on-failure
-    #     delay: 5s
-    #     window: 30s
 
   # MJPEG Streamer
   # Kafka -> HTTP MJPEG Streaming server -> MJPEG live-streams
@@ -187,22 +182,10 @@ services:
       - OUT_TOPIC_GESTURE={{ camera }}-gesture-stream
       - DATA_TOPIC_GESTURE=data
     restart: unless-stopped
-  {# ai-process-{{ camera  }}:
-    build:
-      context: ./Video_Detection_Part
-      dockerfile: ../dockerfiles/AIProcess.Dockerfile
-    depends_on:
-      - mjpegstreamer
-    networks:
-      - kafka-net
-    environment:
-      - CAMERA={{ camera }}
-      - MJPEG_SERVER=mjpegstreamer:8095
-      - PORT=8096
-    ports:
-      - 8096:8096
-    restart: no #}
   
+  # WebSocket API for face register
+  # accepts websocket message and image from local webcam to register new face
+  # -> then we must restart the AI processes manually
   ai-process-kafka-sockapi-{{ camera }}:
     build:
       context: ./AIProcess-Kafka
@@ -216,17 +199,12 @@ services:
       - mjpegstreamer
     volumes:
       - ./AIProcess-Data:/app/VideoProcess/Data
-    environment:
-      - KAFKA_SERVERS=kafka:9092
-      - DATA_TOPIC=data
-      - DATA_PORT=8200
-      {# - MJPEG_SERVER=mjpegstreamer:8095
-      - IN_TOPIC={{ camera }}-stream #}
     restart: unless-stopped
-    {# TODO: move this outside loop, single instance not using Kafka #}
   {%- endfor %}
 
-  {# TODO: API Server #}
+  # API Data Server
+  # Reads Kafka Data channel output from AI and keeps a cache
+  # which WebUI can access as JSON via HTTP XHR request
   ai-process-kafka-dataserver:
     build:
       context: ./AIProcess-Kafka
