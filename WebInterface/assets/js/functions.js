@@ -151,7 +151,8 @@ function updateAIDatafromBackend(){
                 changes = reorganizeChanges(changes)
                 if (!(Object.keys(changes).length === 0)) {
                     // changes detected
-                    console.log(JSON.stringify(changes))
+                    // console.log(JSON.stringify(changes))
+                    outputLogMessages(changes)
                 }
                 AIdata = data
 
@@ -264,4 +265,46 @@ function reorganizeChanges(obj) {
     }
 
     return { faces_change, hands_change, pose_change };
+}
+
+function outputLogMessages(changes) {
+    const timestamp = new Date().toISOString();
+
+    if (changes.faces_change) {
+        const changesObj = changes.faces_change;
+        for (const camera in changesObj) {
+            const state = changesObj[camera];
+            const message = `[${timestamp}] Camera ${camera}: Face detected: ${state}\n`;
+            document.getElementById('detect-face').value += message;
+        }
+        scrollToBottom('detect-face');
+    }
+
+    if (changes.hands_change) {
+        const changesObj = changes.hands_change;
+        for (const camera in changesObj) {
+            const state = changesObj[camera];
+            const message = `[${timestamp}] Camera ${camera}: Hand detected, gesture: ${state}\n`;
+            document.getElementById('detect-hand').value += message;
+        }
+        scrollToBottom('detect-hand');
+    }
+
+    if (changes.pose_change) {
+        const changesObj = changes.pose_change;
+        for (const camera in changesObj) {
+            const state = changesObj[camera];
+            const message = `[${timestamp}] Camera ${camera}: Pose detected, state: ${state}\n`;
+            document.getElementById('detect-fall').value += message;
+            if (state == "fall") {
+                alert(message)
+            }
+        }
+        scrollToBottom('detect-fall');
+    }
+}
+
+function scrollToBottom(id) {
+    const textarea = document.getElementById(id);
+    textarea.scrollTop = textarea.scrollHeight;
 }
