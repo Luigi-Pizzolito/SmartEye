@@ -36,6 +36,8 @@ func ServeMJPEG(w http.ResponseWriter, r *http.Request) {
 	w.Header().Add("Content-Type", contentType)
 	w.Header().Set("Cache-Control", "no-cache")
 	w.Header().Set("Connection", "keep-alive")
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
 
 	// Implementing CloseNotifier to check if client disconnected
 	closeNotifier := w.(http.CloseNotifier).CloseNotify()

@@ -48,10 +48,12 @@ class SimpleHTTPRequestHandler(BaseHTTPRequestHandler):
     def do_GET(self):
         if self.path == '/data':
             self.send_response(200)
-            self.send_header('Content-type', 'text/plain')
+            self.send_header('Content-type', 'application/json')
+            self.send_header('Access-Control-Allow-Origin', '*')
+            self.send_header('Access-Control-Allow-Headers', 'Content-Type')
             self.end_headers()
             data = json.dumps(message_dict)
-            self.wfile.write(data.encode('utf-16'))
+            self.wfile.write(data.encode('utf-8'))
         else:
             self.send_response(404)
             self.send_header('Content-type', 'text/plain')
