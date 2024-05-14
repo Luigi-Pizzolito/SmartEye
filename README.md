@@ -46,8 +46,7 @@
 Below is a tree of the project directory structure with an explanation of the purpose of each file/directory:
 ```
 SmartEye
-├── ESP32CAM-Firmware
-│   └── (Arduino code for ESP-CAM Firmware)
+├── ESP32CAM-Firmware                   (Arduino code for ESP-CAM Firmware)
 │
 │
 ├── dockerfiles                         (Docker image build files)
@@ -63,53 +62,51 @@ SmartEye
 │
 │
 ├── AIProcess-Data                      (AI Processing Data Store)
-│   ├── data_dlib
-│   │   └── (Model Weights for face recognition)
-│   ├── data_faces
-│   │   └── (Individual faces registration images)
-│   └── features.csv (Extracted registration facial features)
+│   ├── data_dlib                       (Model Weights for face recognition)
+│   ├── data_faces                      (Individual faces registration images)
+│   └── features.csv                    (Extracted registration facial features)
 │
-├── AIProcess-Kafka         (Code for AI processing of camera feeds)
-│   ├── VideoProcess        (Sub-classes for each algorithm)
+├── AIProcess-Kafka                     (Code for AI processing of camera feeds)
+│   ├── VideoProcess                    (Sub-classes for each algorithm)
 │   │   ├── Face_read.py
 │   │   ├── Face_store.py
 │   │   ├── KafkaFace.py
 │   │   ├── KafkaHand.py
 │   │   └── KafkaPose.py
-│   ├── kafkacon.py         (Class for Kafka connections)
-│   ├── main.py             (main.py for AI processing)
-│   ├── Servedata.py        (main.py for Kafka AI Data API)
-│   └── Server.py           (main.py for AI Face Register WS API)
+│   ├── kafkacon.py                     (Class for Kafka connections)
+│   ├── main.py                         (main.py for AI processing)
+│   ├── Servedata.py                    (main.py for Kafka AI Data API)
+│   └── Server.py                       (main.py for AI Face Register WS API)
 │
-├── MJPEGStreamer           (Code for stream redistributor)
-│   ├── bcast.go            (Class for one-to-many broadcast)
-│   ├── fps.go              (Class for FPS counting)
-│   ├── kafka.go            (Class for Kafka connection)
-│   ├── main.go             (Main program)
-│   └── mjpeg.go            (Class for MJPEG encoding)
+├── MJPEGStreamer                       (Code for stream redistributor)
+│   ├── bcast.go                        (Class for one-to-many broadcast)
+│   ├── fps.go                          (Class for FPS counting)
+│   ├── kafka.go                        (Class for Kafka connection)
+│   ├── main.go                         (Main program)
+│   └── mjpeg.go                        (Class for MJPEG encoding)
 │
-├── VideoBuffer             (Code for ESP-CAM video buffer)
-│   ├── env.go              (Class for getting configuration)
-│   ├── kafka.go            (Class for Kafka connection)
-│   └── main.go             (Main program)
+├── VideoBuffer                         (Code for ESP-CAM video buffer)
+│   ├── env.go                          (Class for getting configuration)
+│   ├── kafka.go                        (Class for Kafka connection)
+│   └── main.go                         (Main program)
 │
-├── WebInterface            (Client code for web interface)
-│   ├── assets              (CSS/JS/IMG assets)
+├── WebInterface                        (Client code for web interface)
+│   ├── assets                          (CSS/JS/IMG assets)
 │   │   ├── css
 │   │   ├── img
 │   │   └── js
-│   ├── docs.html           (Documentation page)
-│   ├── Face_register.html  (Face Register Page)
-│   ├── index.html          (Index page)
-│   ├── Login.html          (User login page)
-│   └── Register.html       (User register page)
+│   ├── docs.html                       (Documentation page)
+│   ├── Face_register.html              (Face Register Page)
+│   ├── index.html                      (Index page)
+│   ├── Login.html                      (User login page)
+│   └── Register.html                   (User register page)
 │
 │
-├── config.env              (Whole-system configuration)
-├── README.md               (This file)
-├── setup.sh                (Docker template generation for Linux)
-├── setup_windows.sh        (Docker template generation for Windows)
-└── stream_usbcam.py        (Testing local webcam streamer)
+├── config.env                          (Whole-system configuration)
+├── README.md                           (This file)
+├── setup.sh                            (Docker template generation for Linux)
+├── setup_windows.sh                    (Docker template generation for Windows)
+└── stream_usbcam.py                    (Testing local webcam streamer)
 
 26 directories, 137 files
 ```
