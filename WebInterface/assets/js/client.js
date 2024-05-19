@@ -46,6 +46,7 @@ navigator.mediaDevices.getUserMedia({ video: true })
         video.srcObject = stream;
         video.play();
 
+        // TODO: set and clear this interval with buttons 1 & 3 so that we are not always sending images?
         setInterval(function () {
 
             //* call new function
