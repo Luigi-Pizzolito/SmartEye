@@ -38,18 +38,17 @@ import (
 	"encoding/json"
 	"net/http"
 	"sync"
-
+	"time"
 	//! profiler deps
-	_ "net/http/pprof"
-
-	"github.com/felixge/fgprof"
+	// _ "net/http/pprof"
+	// "github.com/felixge/fgprof"
 )
 
 var (
 	// List of Kafka topics containing valid MJPEG streams to distribute
 	streamChannels []string
 	// Map of broadcast groups, used to send the JPEG frames to each handler serving the stream to each connected client
-	bcastMap map[string]*broadcast
+	bcastMap map[string]*Broadcast
 	// Multiple FPS counter manager, for counting the FPS of each stream
 	fpsman *MultiFPSCounter
 	// Waitgroup for async goroutines
@@ -57,11 +56,12 @@ var (
 )
 
 func main() {
-	//! profiler insert
-	http.DefaultServeMux.Handle("/debug/fgprof", fgprof.Handler())
-	go func() {
-		log.Println(http.ListenAndServe(":6060", nil))
-	}()
+	// //! profiler insert
+	// http.DefaultServeMux.Handle("/debug/fgprof", fgprof.Handler())
+	// go func() {
+	// 	log.Println(http.ListenAndServe(":6060", nil))
+	// }()
+
 	// params
 	addr := ":8095"
 	kafkaBrokers := []string{"kafka:9092"}
@@ -71,42 +71,36 @@ func main() {
 	// connect to Kafka brokers
 	kafkaCon := NewKafkaMultiStreamReader(kafkaBrokers, frameStreams)
 
-	// get channels from Kafka
-	// TODO: get new frame topics and update when the ai starts
-	streamChannels = kafkaCon.getFrameTopicsList()
-	fmt.Println("Found frame topics: ", streamChannels)
-
 	// setup FPS counters
 	fpsman = NewMultiFPSCounter()
 	wg.Add(1)
 	go fpsman.tick() // Update FPS counters asynchronously
 
 	// create broadcast group map
-	bcastMap = make(map[string]*broadcast)
+	bcastMap = make(map[string]*Broadcast)
 
 	// Setup HTTP server mux to handle multiple endpoints/streams
 	mux := http.NewServeMux()
 
-	for _, channel := range streamChannels {
-		// for each channel, asynchronously setup the server backend
-		go func() {
-			// Create broadcast group to send the frames to all clients' server routines
-			channelName := "/" + channel + ".mjpeg"
-			bcastMap[channelName] = NewBroadcastGroup()
+	// TODO: get new frame topics and update when the ai starts
+	updateStreamList(kafkaCon, bcastMap, fpsman, mux, addr, wg)
 
-			// Start FPS counter
-			fpsman.frame(channel)
+	// Update stream list every 10 seconds
+	updateStreamsInterval := 10
+	ticker := time.NewTicker(time.Duration(updateStreamsInterval) * time.Second)
 
-			// Start goroutines for Kafka consumer
-			wg.Add(1)
-			go kafkaCon.consumeTopicFrames(channel, bcastMap[channelName])
-
-			// Start the server handler
-			mux.HandleFunc("/"+channel+".mjpeg", ServeMJPEG)
-			// Print the host and port
-			fmt.Printf("Handling endpoint at %s/%s.mjpeg\n", addr, channel)
-		}()
-	}
+	wg.Add(1)
+	go func(kafkaCon *KafkaMultiStreamReader, bcastMap map[string]*Broadcast, fpsman *MultiFPSCounter, mux *http.ServeMux, addr string, wg sync.WaitGroup) {
+		defer wg.Done()
+		defer ticker.Stop()
+		time.Sleep(5 * time.Second)
+		for {
+			select {
+			case _ = <-ticker.C:
+				updateStreamList(kafkaCon, bcastMap, fpsman, mux, addr, wg)
+			}
+		}
+	}(kafkaCon, bcastMap, fpsman, mux, addr, wg)
 
 	// Setup stream listing JSON endpoint
 	mux.HandleFunc("/list", listStreams)
@@ -152,4 +146,42 @@ func listStreams(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Failed to write response", http.StatusInternalServerError)
 		return
 	}
+}
+
+func updateStreamList(kafkaCon *KafkaMultiStreamReader, bcastMap map[string]*Broadcast, fpsman *MultiFPSCounter, mux *http.ServeMux, addr string, wg sync.WaitGroup) {
+	fmt.Println("Updating streams list...")
+	// get channels from Kafka
+	streamChannels = kafkaCon.getFrameTopicsList()
+	fmt.Println("Found frame topics: ", streamChannels)
+
+	var existingBroadcasts []string
+	for _, channel := range streamChannels {
+		// for each channel, asynchronously setup the server backend
+		// but only if it doesnt already exist in broadcast map
+		if _, exists := bcastMap["/"+channel+".mjpeg"]; !exists {
+			// setup new broadcast
+			go func() {
+				// Create broadcast group to send the frames to all clients' server routines
+				channelName := "/" + channel + ".mjpeg"
+				bcastMap[channelName] = NewBroadcastGroup()
+
+				// Start FPS counter
+				fpsman.frame(channel)
+
+				// Start goroutines for Kafka consumer
+				wg.Add(1)
+				go kafkaCon.consumeTopicFrames(channel, bcastMap[channelName])
+
+				// Start the server handler
+				mux.HandleFunc("/"+channel+".mjpeg", ServeMJPEG)
+				// Print the host and port
+				fmt.Printf("Handling endpoint at %s/%s.mjpeg\n", addr, channel)
+			}()
+		} else {
+			// Broadcast already exists for this channel
+			existingBroadcasts = append(existingBroadcasts, channel)
+		}
+	}
+	// Print not re-added broadcasts (skipped)
+	fmt.Printf("Not re-adding existing broadcasts: %s\n", existingBroadcasts)
 }

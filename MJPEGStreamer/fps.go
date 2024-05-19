@@ -7,6 +7,7 @@ package main
 // Utility class to calculate the current FPS of every incoming livestream
 
 import (
+	"sync"
 	"time"
 )
 
@@ -20,6 +21,7 @@ type FPSCounter struct {
 // Multi FPS counter struct, multiple FPS counter manager
 type MultiFPSCounter struct {
 	fpsc map[string]*FPSCounter
+	mu   sync.Mutex
 }
 
 // Instantiation
@@ -37,8 +39,10 @@ func (c *MultiFPSCounter) tick() {
 			// every second
 			for key, _ := range c.fpsc {
 				// for each FPS counter, update the fps
+				c.mu.Lock()
 				c.fpsc[key].rate = c.fpsc[key].counter - c.fpsc[key].prev
 				c.fpsc[key].prev = c.fpsc[key].counter
+				c.mu.Unlock()
 			}
 		}
 	}
@@ -46,6 +50,7 @@ func (c *MultiFPSCounter) tick() {
 
 // Register a frame for a FPS counter
 func (c *MultiFPSCounter) frame(id string) {
+	c.mu.Lock()
 	// Check if counter for id exists
 	_, exists := c.fpsc[id]
 	if !exists {
@@ -58,20 +63,26 @@ func (c *MultiFPSCounter) frame(id string) {
 	}
 	// increase frame counter for this second
 	c.fpsc[id].counter++
+	c.mu.Unlock()
 }
 
 // Read the current FPS of a FPS counter
 func (c *MultiFPSCounter) fps(id string) int {
-	return c.fpsc[id].rate
+	c.mu.Lock()
+	rate := c.fpsc[id].rate
+	c.mu.Unlock()
+	return rate
 }
 
-// Read the current FPS of aall FPS counters
+// Read the current FPS of all FPS counters
 func (c *MultiFPSCounter) fpsAll() map[string]int {
+	c.mu.Lock()
 	rates := make(map[string]int)
 	if len(c.fpsc) > 0 && c.fpsc != nil {
 		for key, counter := range c.fpsc {
 			rates[key] = counter.rate
 		}
 	}
+	c.mu.Unlock()
 	return rates
 }

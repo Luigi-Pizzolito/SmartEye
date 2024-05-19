@@ -17,7 +17,7 @@ import (
 )
 
 // Kafka Multi-Stream reader struct
-type kafkaMultiStreamReader struct {
+type KafkaMultiStreamReader struct {
 	brokers []string
 	config  *sarama.Config
 
@@ -25,12 +25,12 @@ type kafkaMultiStreamReader struct {
 }
 
 // Kafka Multi-Stream reader initialiser
-func NewKafkaMultiStreamReader(brokers []string, validstreams []string) *kafkaMultiStreamReader {
+func NewKafkaMultiStreamReader(brokers []string, validstreams []string) *KafkaMultiStreamReader {
 	// Initialize Kafka consumer
 	config := sarama.NewConfig()
 	config.Consumer.Return.Errors = true
 	// Return struct
-	return &kafkaMultiStreamReader{
+	return &KafkaMultiStreamReader{
 		brokers:      brokers,
 		config:       config,
 		framestreams: validstreams,
@@ -38,7 +38,7 @@ func NewKafkaMultiStreamReader(brokers []string, validstreams []string) *kafkaMu
 }
 
 // Method for getting a list of valid MJPEG stream Kafka topics
-func (k *kafkaMultiStreamReader) getFrameTopicsList() []string {
+func (k *KafkaMultiStreamReader) getFrameTopicsList() []string {
 fetch_topics:
 	// Start a Kafka cluster admin to be able to access the topic list
 	admin, err := sarama.NewClusterAdmin(k.brokers, k.config)
@@ -92,7 +92,7 @@ func ContainsAnySubstring(str string, substrs []string) bool {
 // Method for consuming MJPEG frames
 // forwarding the frame data to a broadcast group
 // and updating the stream's FPS counter
-func (k *kafkaMultiStreamReader) consumeTopicFrames(topic string, bcast *broadcast) {
+func (k *KafkaMultiStreamReader) consumeTopicFrames(topic string, bcast *Broadcast) {
 	defer wg.Done()
 
 	// Create new Kafka consumer
