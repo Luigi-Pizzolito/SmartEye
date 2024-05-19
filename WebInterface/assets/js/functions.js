@@ -297,7 +297,8 @@ function outputLogMessages(changes) {
             const message = `[${timestamp}] Camera ${camera}: Pose detected, state: ${state}\n`;
             document.getElementById('detect-fall').value += message;
             if (state == "fall") {
-                alert(message)
+                // alert(message)
+                showNotification(message)
             }
         }
         scrollToBottom('detect-fall');
@@ -308,3 +309,26 @@ function scrollToBottom(id) {
     const textarea = document.getElementById(id);
     textarea.scrollTop = textarea.scrollHeight;
 }
+
+
+function showNotification(text) {
+    // Check if the browser supports notifications
+    if (!("Notification" in window)) {
+      console.error("This browser does not support desktop notification");
+      return;
+    }
+  
+    // Check if notification permission is granted
+    if (Notification.permission === "granted") {
+      // If it's okay, create a notification
+      var notification = new Notification(text);
+    } else if (Notification.permission !== "denied") {
+      // Otherwise, ask for permission
+      Notification.requestPermission().then(function (permission) {
+        // If permission is granted, create a notification
+        if (permission === "granted") {
+          var notification = new Notification(text);
+        }
+      });
+    }
+  }
