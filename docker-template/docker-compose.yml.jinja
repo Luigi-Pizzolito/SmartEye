@@ -184,6 +184,7 @@ services:
       - DATA_TOPIC_POSE=data
       - OUT_TOPIC_GESTURE={{ camera }}-gesture-stream
       - DATA_TOPIC_GESTURE=data
+      - FRAMESKIP={{ env.FRAMESKIP }}
     restart: unless-stopped
   
   # WebSocket API for face register for each camera

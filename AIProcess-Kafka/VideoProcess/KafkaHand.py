@@ -120,9 +120,22 @@ class GestureDetection:
         return gesture_str
 
     def detect(self,cam,  kafka, out_topic, data_topic  ):
+        # ! FRAMESKIP
+        frameskip = int(os.environ["FRAMESKIP"])
+        framecount = frameskip-1
+
         while True:
             kafka_data = {'camera': self.topiccam, 'hand':''}
             ret, frame = cam.read()
+
+            # ! FRAMESKIP IMPLEMENTED FOR PERFORMANCE REASONS
+            framecount += 1
+            if framecount != frameskip:
+                continue
+            if framecount >= frameskip:
+                framecount = 0
+            # ! FRAMESKIP IMPLEMENTED FOR PERFORMANCE REASONS
+
 
             frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
             # frame = cv2.flip(frame, 1)

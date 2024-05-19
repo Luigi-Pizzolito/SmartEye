@@ -10,6 +10,10 @@ import mediapipe as mp
 import numpy as np
 import os
 
+# ! For frameskip implementation
+frameskip = int(os.environ["FRAMESKIP"])
+framecount = 0
+
 
 
 class FallDetection:
@@ -64,11 +68,27 @@ class FallDetection:
         with self.mp_pose.Pose(
                 min_detection_confidence=0.7, min_tracking_confidence=0.7
         ) as pose:
+
+            # ! FRAMESKIP
+            frameskip = int(os.environ["FRAMESKIP"])
+            framecount = frameskip-1
+
             while cam.isOpened():
                 kafka_data = {} # -- store the information to send
                 ret, frame = cam.read()
                 if not ret:
                     break
+
+
+                # ! FRAMESKIP IMPLEMENTED FOR PERFORMANCE REASONS
+                framecount += 1
+                if framecount != frameskip:
+                    continue
+                if framecount >= frameskip:
+                    framecount = 0
+                # ! FRAMESKIP IMPLEMENTED FOR PERFORMANCE REASONS
+
+
 
                 image = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
                 image.flags.writeable = False

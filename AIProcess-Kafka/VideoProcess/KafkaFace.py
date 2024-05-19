@@ -14,6 +14,10 @@ import numpy as np
 import pandas as pd
 import os
 
+# ! For frameskip implementation
+frameskip = int(os.environ["FRAMESKIP"])
+framecount = 0
+
 class FaceRecognizer:
     def __init__(self):
         self.font = cv.FONT_ITALIC
@@ -142,6 +146,11 @@ class FaceRecognizer:
 
     def process(self, stream, kafka, out_topic, data_topic):        
         if self.get_faces_database():
+
+            # ! FRAMESKIP
+            frameskip = int(os.environ["FRAMESKIP"])
+            framecount = frameskip-1
+
             while stream.isOpened():
                 kafka_data = {} # -- store the imformation to send
                 facesout = []
@@ -149,6 +158,18 @@ class FaceRecognizer:
                 self.frame_cnt +=1
                 logging.debug("Frame"+str(self.frame_cnt)+"starts")
                 flag, img=stream.read()
+
+
+                # ! FRAMESKIP IMPLEMENTED FOR PERFORMANCE REASONS
+                framecount += 1
+                if framecount != frameskip:
+                    continue
+                if framecount >= frameskip:
+                    framecount = 0
+                # ! FRAMESKIP IMPLEMENTED FOR PERFORMANCE REASONS
+
+
+
                 # k=cv.waitKey(1)
                 k=-1
 
