@@ -122,6 +122,7 @@ services:
     depends_on:
       - kafka
     restart: unless-stopped
+
   {%- endfor %}
 
   # MJPEG Streamer
@@ -202,7 +203,8 @@ services:
     volumes:
       - ./AIProcess-Data:/app/VideoProcess/Data
     restart: unless-stopped
-  {%- endfor %}
+
+  {% endfor %}
 
   # API Data Server
   # Reads Kafka Data channel output from AI and keeps a cache

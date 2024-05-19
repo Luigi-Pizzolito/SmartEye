@@ -106,7 +106,7 @@ updated = false
 function documentLoaded() {
     updateListfromBackend()
     checkUpdated();
-    window.setInterval(updateListfromBackend, 500)
+    window.setInterval(updateListfromBackend, 1000)
     // window.setInterval(checkUpdated, 30000)
     window.setInterval(updateAIDatafromBackend, 200)
 }
