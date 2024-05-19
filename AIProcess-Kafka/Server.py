@@ -13,6 +13,8 @@ import dlib
 from VideoProcess.Face_store import face_store
 from VideoProcess.Face_read import FaceRegister
 
+import docker
+
 # *******************************************************************
 # * Author: 2024 Kael (956136864@qq.com)
 # *         2024 Luigi Pizzolito (@https://github.com/Luigi-Pizzolito)
@@ -118,6 +120,7 @@ async def handle_message(websocket):
                 
             else: 
                 save_flag = 0
+                await websocket.send('{"ok": false, "msg":"Face not detected", "notif": true}')
                 
             if save_flag:
                 if key == 's':
@@ -144,7 +147,15 @@ async def handle_message(websocket):
                 # face_store("../AIProcess-Data/data_faces/" )
                 face_store("./VideoProcess/Data/data_faces/" )
                 print("Updated face storage")            
-                await websocket.send('{"ok": true, "msg":"Updated face storage DB complete", "notif": true}')
+                await websocket.send('{"ok": true, "msg":"Updated face storage DB complete, restarting AI processing", "notif": true}')
+                try:
+                    print("Restarting AI Docker containers")
+                    restart_filtered_containers()
+                    await websocket.send('{"ok": true, "msg":"Restarted AI processing", "notif": true}')
+                except:
+                    await websocket.send('{"ok": false, "msg":"Failed to restart AI processing", "notif": true}')
+                    print(f"An error occurred with Docker API: {e}")
+
 
     
 
@@ -154,3 +165,47 @@ if __name__=="__main__":
     asyncio.get_event_loop().run_until_complete(server)
     asyncio.get_event_loop().run_forever()
 
+
+# DOCKER API FUNCTIONS
+# Get list of AI Processing containers
+def list_filtered_containers():
+    client = docker.from_env()
+
+    filtered_containers = []
+
+    try:
+        # Get all running containers
+        containers = client.containers.list()
+
+        # Filter containers based on name
+        for container in containers:
+            container_name = container.attrs['Name'][1:]  # Remove leading '/'
+            
+            # Check if the container name contains "smart-eye-ai-process-kafka-" but not the excluded names
+            if "smart-eye-ai-process-kafka-" in container_name \
+                    and not ("smart-eye-ai-process-kafka-dataserver" in container_name) \
+                    and not ("smart-eye-ai-process-kafka-sockapi" in container_name):
+                filtered_containers.append(container_name)
+    except docker.errors.APIError as e:
+        print(f"Failed to list containers: {e}")
+
+    return filtered_containers
+
+# Restart individual container by name or id
+def restart_container(container_name_or_id):
+    client = docker.from_env()  # This automatically connects to the Docker socket mounted in the container
+
+    try:
+        container = client.containers.get(container_name_or_id)
+        container.restart()
+        print(f"Container {container_name_or_id} restarted successfully.")
+    except docker.errors.NotFound:
+        print(f"Container {container_name_or_id} not found.")
+    except docker.errors.APIError as e:
+        print(f"Failed to restart container {container_name_or_id}: {e}")
+
+# Restart function for each container
+def restart_filtered_containers():
+    filtered_container_names = list_filtered_containers()
+    for container_name in filtered_container_names:
+        restart_container(container_name)

@@ -83,7 +83,8 @@ services:
     depends_on:
       - zookeeper
     
-  kafka-ui:
+  # Kafka WebUI for debugging
+  {# kafka-ui:
     image: provectuslabs/kafka-ui
     networks:
       - kafka-net
@@ -96,7 +97,7 @@ services:
     ports:
       - 8092:8080
     depends_on:
-      - kafka
+      - kafka #}
 
   # Video Buffer
   # ESP32CAM -> Kafka
@@ -203,6 +204,7 @@ services:
       - mjpegstreamer
     volumes:
       - ./AIProcess-Data:/app/VideoProcess/Data
+      - /var/run/docker.sock:/var/run/docker.sock  # Added to allow this container to access Docker API to restart other containers
     restart: unless-stopped
 
   {% endfor %}
