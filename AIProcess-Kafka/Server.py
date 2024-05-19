@@ -8,6 +8,7 @@ from io import BytesIO
 from PIL import Image
 import base64
 import time
+from datetime import datetime
 import dlib
 from VideoProcess.Face_store import face_store
 from VideoProcess.Face_read import FaceRegister
@@ -37,7 +38,26 @@ async def handle_message(websocket):
             
             faces = detector(frame)
             face_recog.current_frame_faces_cnt = len(faces)
-            face_recog.draw_note(frame)
+
+            #! only draw frame and text for debug save
+            # face_recog.draw_note(frame)
+
+            #* DEBUG, SAVE ALL CAPTURED IMAGES
+            if len(faces) == 1:
+                d = faces[0]
+                height = (d.bottom() - d.top())
+                width = (d.right() - d.left())
+                hh = int(height / 2)
+                ww = int(width / 2)
+                color = (0, 255, 0)
+                copied_frame = frame.copy()         #! copy frame here to not write over the original face
+                face_recog.draw_note(copied_frame)
+                cv.rectangle(copied_frame, tuple([d.left() - ww, d.top() - hh]),
+                                tuple([d.right() + ww, d.bottom() + hh]),
+                                color, thickness=2)
+                cv.imwrite('./VideoProcess/Data/ws_recieved/'+datetime.now().strftime('%Y-%m-%d_%H-%M-%S')+'.jpg', copied_frame)
+
+
         except Exception as e:
             # -- receive actions from websocket
             # face_recog.update_fps()
@@ -47,9 +67,10 @@ async def handle_message(websocket):
             if key == 'r':
                 print("New dir")
                 # face_recog.existing_faces_cnt += 1
-                current_timestamp = time.time()
-                local_time = str(time.localtime(current_timestamp) )
-                time_now = local_time.replace(" ", "")
+                # current_timestamp = time.time()
+                # local_time = str(time.localtime(current_timestamp) )
+                # time_now = local_time.replace(" ", "")
+                time_now = datetime.now().strftime('%Y-%m-%d_%H-%M-%S')
                 # face_recog.path_photos_from_camera = '../AIProcess-Data/data_faces/' + time_now
                 face_recog.path_photos_from_camera = './VideoProcess/Data/data_faces/' + time_now
                 if not os.path.isdir(face_recog.path_photos_from_camera):
@@ -63,10 +84,13 @@ async def handle_message(websocket):
                 face_recog.press_n_flag = 1
                 #! send reply
                 await websocket.send('{"ok": true, "msg":"Made folder for new face."}')
+                print("Made folder for new face.")
 
 
             if len(faces) == 1:
                 print("One face detected, enable img saving")
+                #! send reply
+                await websocket.send('{"ok": true, "msg":"One face detected, enable img saving"}')
                 d = faces[0]
                 height = (d.bottom() - d.top())
                 width = (d.right() - d.left())
@@ -77,11 +101,16 @@ async def handle_message(websocket):
                     save_flag = 0
                     if key == 's':
                         print("crop out of range")   
+                        #! send reply
+                        await websocket.send('{"ok": false, "msg":"crop out of range"}')
                         pass
 
                 else:
                     color = (255, 255, 255)
                     save_flag = 1
+                    #! send reply
+                    await websocket.send('{"ok": false, "msg":"No face detected in IMG"}')
+
                 
                 cv.rectangle(frame, tuple([d.left() - ww, d.top() - hh]),
                             tuple([d.right() + ww, d.bottom() + hh]),
@@ -96,7 +125,9 @@ async def handle_message(websocket):
             if save_flag:
                 if key == 's':
                     if face_recog.press_n_flag:
-                        print("New folder found, successfully saved a img")              
+                        print("New folder found, successfully saved a img")     
+                        #! send reply
+                        await websocket.send('{"ok": true, "msg":"New folder found, successfully saved a img"}')         
                         face_recog.ss_cnt += 1
                         for ii in range(height*2):
                             for jj in range(width*2):
@@ -105,14 +136,18 @@ async def handle_message(websocket):
                         await websocket.send('{"ok": true, "msg":"Save img to face storage succeeded."}')
                         ## -- send information
                     else:
-                        print("New folder negitive")            
+                        print("New folder negitive")     
+                        #! send reply
+                        await websocket.send('{"ok": false, "msg":"New folder negitive"}')       
                         pass
 
             if key == 'q':
-                print("Updated face storage")            
-                await websocket.send('{"ok": true, "msg":"Updated face storage DB"}')
+                print("Updating face storage...")            
+                await websocket.send('{"ok": true, "msg":"Updating face storage DB..."}')
                 # face_store("../AIProcess-Data/data_faces/" )
                 face_store("./VideoProcess/Data/data_faces/" )
+                print("Updated face storage")            
+                await websocket.send('{"ok": true, "msg":"Updated face storage DB"}')
 
     
 

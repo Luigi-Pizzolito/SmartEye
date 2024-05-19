@@ -32,5 +32,5 @@ def video_feed():
     return Response(webcam_stream(), mimetype='multipart/x-mixed-replace; boundary=123456789000000000000987654321')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', debug=True)
+    app.run(host='0.0.0.0', port=5001, debug=True)
 
