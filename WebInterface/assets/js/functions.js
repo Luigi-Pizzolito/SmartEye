@@ -248,7 +248,7 @@ function reorganizeChanges(obj) {
     for (let camera in obj) {
         if (obj[camera].hasOwnProperty("faces")) {
             let val = obj[camera]["faces"]["newValue"];
-            if (val.length != 0 && val[0] !== "Unknown") {
+            if (val.length != 0 /*&& val[0] !== "Unknown"*/) {
                 faces_change[camera] = val
             }
         } else if (obj[camera].hasOwnProperty("hand")) {

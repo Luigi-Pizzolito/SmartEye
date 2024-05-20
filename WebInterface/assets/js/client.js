@@ -21,17 +21,22 @@ const faceSave = document.getElementById('faceSaved')
 const faceLoad = document.getElementById('faceLoad')
 
 faceReg.addEventListener('click', () => {
+    // Make new person folder
     person_name = prompt("Enter person name:");
     WSsend(JSON.stringify({ action: 'r', name: person_name }));
 });
 
 faceSave.addEventListener('click', () => {
+    // Save face image
     WSsend(JSON.stringify({ action: 's' }));
 });
 
 faceLoad.addEventListener('click', () => {
+    // Extract features and reload AI containers
     WSsend(JSON.stringify({ action: 'q' }));
 });
+
+var imageSendTimer
 
 navigator.mediaDevices.getUserMedia({ video: true })
     // .then((stream)=>{
@@ -46,23 +51,12 @@ navigator.mediaDevices.getUserMedia({ video: true })
         video.srcObject = stream;
         video.play();
 
-        // TODO: set and clear this interval with buttons 1 & 3 so that we are not always sending images?
-        setInterval(function () {
+
+        imageSendTimer = setInterval(function () {
 
             //* call new function
             sendScreenshot(videoElement)
 
-            // const canvas = document.createElement('canvas');
-            // const ctx = canvas.getContext('2d');
-            // canvas.width = video.videoWidth;
-            // canvas.height = video.videoHeight;
-            // ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
-
-            // canvas.toBlob(function(blob) {
-            //     if (socket.readyState === WebSocket.OPEN) {
-            //         WSsend(blob);
-            //     }
-            // }, 'image/jpeg', 0.9); // JPEG格式，质量为0.9
         }, 1000 / 1); // 假设1fps //* frame rate reduced to 1fps
     })
     .catch((error) => {
